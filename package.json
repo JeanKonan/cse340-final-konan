@@ -1,0 +1,34 @@
+{
+  "name": "cse340-fast-food-ordering",
+  "version": "1.0.0",
+  "description": "**CSE 340 Final Project** | Winter 2026",
+  "homepage": "https://github.com/JeanKonan/cse340-final-konan#readme",
+  "bugs": {
+    "url": "https://github.com/JeanKonan/cse340-final-konan/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeanKonan/cse340-final-konan.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Jean Konan",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "dev": "nodemon --env-file=.env server.js",
+    "setup-db": "node src/models/sql/setup.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-pg-simple": "^10.0.0",
+    "cookie-parser": "^1.4.7",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
