@@ -1,6 +1,6 @@
 import pool from './sql/db.js';
 
-class Menu {
+class MenuModel {
     static async getMenuItems () {
         try {
             const query = `
@@ -70,4 +70,4 @@ class Menu {
     }
 }
 
-export default Menu;
+export default MenuModel;
