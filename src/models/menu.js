@@ -1,4 +1,4 @@
-import pool from './sql/db.js';
+import db from './sql/db.js';
 
 class MenuModel {
     static async getMenuItems () {
@@ -10,7 +10,7 @@ class MenuModel {
                 WHERE m.active = true
                 ORDER BY c.name, m.name
             `;
-            const result = await pool.query(query);
+            const result = await db.query(query);
 
             return result.rows;
         } catch (error) {
@@ -27,7 +27,7 @@ class MenuModel {
                 LEFT JOIN categories c ON m.category_id = c.id
                 WHERE m.id = $1 AND m.active = true
             `;
-            const result = await pool.query(query, [id]);
+            const result = await db.query(query, [id]);
 
             return result.rows[0];
         } catch (error) {
@@ -43,7 +43,7 @@ class MenuModel {
                 FROM categories
                 ORDER BY display_order, name
             `;
-            const result = await pool.query(query);
+            const result = await db.query(query);
 
             return result.rows;
         } catch (error) {
@@ -60,7 +60,7 @@ class MenuModel {
                 WHERE category_id = $1 AND active = true
                 ORDER BY name
             `;
-            const result = await pool.query(query, [categoryId]);
+            const result = await db.query(query, [categoryId]);
 
             return result.rows;
         } catch (error) {
