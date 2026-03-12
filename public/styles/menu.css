@@ -1,9 +1,9 @@
-body {
+/* body {
     font-family: Arial;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-}
+} */
 
 .menu-grid {
     display: grid;
@@ -19,23 +19,31 @@ body {
 
 .price {
     font-size: 1.2em;
-    color: #e63946;
+    color: var(--primary-color);
     font-weight: bold;
 }
 
 .btn {
-    background: #e63946;
+    display: inline-block;
+    background: var(--primary-color);
     color: white;
     border: none;
-    padding: 10px 20px;
+    width: 40px;
+    height: 40px;
+    padding: 5px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 50%;
     text-decoration: none;
     display: inline-block;
+    border: 1px solid transparent;
+    float: inline-end;
+    bottom: 0;
 }
 
 .btn:hover {
-    background: #d32f3d;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    background: var(--primary-color-light);
 }
 
 .category-filter {
@@ -45,12 +53,50 @@ body {
 .category-filter a {
     margin-right: 15px;
     padding: 8px 16px;
-    background: #f0f0f0;
+    /* background: var(--secondary-color); */
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 50px;
+    color: var(--text-color);
+
+    &:hover {
+        /* background: var(--primary-color); */
+        /* color: var(--background-color); */
+        /* transform: background-color 0.5s ease, color 0.5s ease; */
+
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 1rem;
+            height: 2px;
+            background: var(--primary-color);
+            margin-top: 5px;
+            /* border-radius: 50px; */
+            /* top: 100%; */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
 }
 
 .category-filter a.active {
-    background: #e63946;
-    color: white;
+    /* background: var(--primary-color); */
+    color: var(--text-color);
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 1rem;
+        height: 2px;
+        background: var(--primary-color);
+        margin-top: 5px;
+        /* border-radius: 50px; */
+        /* top: 100%; */
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
