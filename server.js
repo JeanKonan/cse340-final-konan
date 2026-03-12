@@ -10,6 +10,7 @@ import { startSessionCleanup } from './src/utils/session-cleanup.js';
 
 import { setupDatabase, testConnection } from './src/models/sql/setup.js';
 import menuRoutes from './src/controllers/menu/routes.js';
+import router from './src/controllers/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,13 +21,13 @@ const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 const PgSession = connectPgSimple(session);
 
 // View engine setup
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src', 'views'));
+app.set('views', path.join(__dirname, 'src/views'));
 
 // Middleware
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 app.use(cookieParser());
 app.use(session({
     store: new PgSession({
@@ -52,7 +53,11 @@ app.use(session({
     }
 }));
 
+
+
 app.use('/menu', menuRoutes);
+app.use('/', router);
+
 
 // test routes
 app.get('/test', (req, res) => {

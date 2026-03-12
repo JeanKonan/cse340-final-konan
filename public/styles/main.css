@@ -1,0 +1,22 @@
+:root {
+    --primary-color: #A61B0F;
+    --primary-color-light: #A61B0F15;
+    --secondary-color: #D9A273;
+    --background-color: #F2F2F2;
+    --text-color: #0c0b0b;
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+}
+
+body {
+    width: 100%;
+    margin: 0;
+    font-size: 1.1em;
+
+    a {
+        text-decoration: none;
+        color: var(--primary-color);
+    }
+}
