@@ -1,40 +1,41 @@
 <%- include('../partials/header.ejs') %>
-        <h1>
-            <%= title %>
-        </h1>
-        <a href="/">Home</a> | <a href="/cart">Cart</a>
+        <main id="menu">
+            <h1>
+                <%= title %>
+            </h1>
+            <a href="/">Home</a> | <a href="/cart">Cart</a>
 
-        <div class="category-filter">
-            <a href="/menu" class="<%= !selectedCategory ? 'active' : '' %>">All</a>
-            <% categories.forEach(cat=> { %>
-                <a href="/menu?category=<%= cat.id %>" class="<%= selectedCategory == cat.id ? 'active' : '' %>">
-                    <%= cat.name %>
-                </a>
-                <% }); %>
-        </div>
+            <div class="category-filter">
+                <a href="/menu" class="<%= !selectedCategory ? 'active' : '' %>">All</a>
+                <% categories.forEach(cat=> { %>
+                    <a href="/menu?category=<%= cat.id %>" class="<%= selectedCategory == cat.id ? 'active' : '' %>">
+                        <%= cat.name %>
+                    </a>
+                    <% }); %>
+            </div>
 
-        <div class="menu-grid">
-            <% menuItems.forEach(item=> { %>
-                <div class="menu-item">
-                    <h3>
-                        <%= item.name %>
-                    </h3>
-                    <p>
-                        <%= item.description %>
-                    </p>
-                    <p class="price">$<%= item.price %>
-                    </p>
-                    <% if (item.available) { %>
-                        <form action="/cart/add" method="POST">
-                            <input type="hidden" name="menuItemId" value="<%= item.id %>">
-                            <input type="number" name="quantity" value="1" min="1" max="10" style="width: 60px;">
-                            <button type="submit" class="btn">+</button>
-                        </form>
-                        <% } else { %>
-                            <span>Unavailable</span>
-                            <% } %>
-                </div>
-                <% }); %>
-        </div>
-
+            <div class="menu-grid">
+                <% menuItems.forEach(item=> { %>
+                    <div class="menu-item">
+                        <h3>
+                            <%= item.name %>
+                        </h3>
+                        <p>
+                            <%= item.description %>
+                        </p>
+                        <p class="price">$<%= item.price %>
+                        </p>
+                        <% if (item.available) { %>
+                            <form action="/cart/add" method="POST">
+                                <input type="hidden" name="menuItemId" value="<%= item.id %>">
+                                <input type="number" name="quantity" value="1" min="1" max="10" style="width: 60px;">
+                                <button type="submit" class="btn">+</button>
+                            </form>
+                            <% } else { %>
+                                <span>Unavailable</span>
+                                <% } %>
+                    </div>
+                    <% }); %>
+            </div>
+        </main>
 <%- include('../partials/footer.ejs') %>

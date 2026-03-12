@@ -20,12 +20,37 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-    font-size: 1.1em;
+    /* font-size: 1.1em; */
     font-family: var(--font-family-secondary);
 
     a {
         text-decoration: none;
         color: var(--primary-color);
+    }
+}
+
+main {
+    padding: 20px;
+    width: clamp(300px, 80%, 1200px);
+    margin: 0 auto;
+}
+
+#home {
+    width: 100%;
+    padding: 0;
+    background-color: var(--primary-color-light);
+    #hero {
+
+        margin: 0 auto;
+        
+        h1 {
+            width: 80%;
+            margin: 0 auto;
+            text-transform: capitalize;
+            font-size: 5em;
+            line-height: 5rem;
+            text-align: center;
+        }
     }
 }
 
