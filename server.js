@@ -10,6 +10,8 @@ import { startSessionCleanup } from './src/utils/session-cleanup.js';
 
 import { setupDatabase, testConnection } from './src/models/sql/setup.js';
 import menuRoutes from './src/controllers/menu/routes.js';
+import cartRoutes from './src/controllers/cart/routes.js';
+
 import router from './src/controllers/index.js';
 import { addLocalVariables } from './src/middleware/global.js';
 
@@ -58,6 +60,7 @@ app.use(addLocalVariables);
 
 
 app.use('/menu', menuRoutes);
+app.use('/cart', cartRoutes);
 app.use('/', router);
 
 
