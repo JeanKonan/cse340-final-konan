@@ -3,7 +3,7 @@
             <h1>
                 <%= title %>
             </h1>
-            <a href="/">Home</a> | <a href="/cart">Cart</a>
+            <!-- <a href="/">Home</a> | <a href="/cart">Cart</a> -->
 
             <div class="category-filter">
                 <a href="/menu" class="<%= !selectedCategory ? 'active' : '' %>">All</a>
@@ -33,7 +33,7 @@
                                 <form action="/cart/add" method="POST">
                                     <input type="hidden" name="menuItemId" value="<%= item.id %>">
                                     <input type="number" name="quantity" value="1" min="1" max="10">
-                                    <button type="submit" class="btn"><span class="plus-btn">+</span></button>
+                                    <button type="submit" class="btn"><span class="add-btn">+</span></button>
                                 </form>
                             <% } else { %>
                                 <span>Unavailable</span>

@@ -1,0 +1,57 @@
+<%- include('../partials/header.ejs') %>
+    <main id="cart">
+        <h1>
+            <%= title %>
+        </h1>
+
+        <a href="/menu" class="btn"><span class="back">←</span></a>
+
+        <% const cartItems = Array.isArray(cart) ? cart : []; %>
+
+        <% if (cartItems.length===0) { %>
+            <p>Your cart is empty.</p>
+            <!-- <a href="/menu" class="btn">Browse Menu</a> -->
+            <% } else { %>
+                <% cartItems.forEach(item=> { %>
+                    <div class="cart-item">
+                        <% const unitPrice = Number(item.price) || 0; %>
+                        <% const quantity = Number(item.quantity) || 0; %>
+                        <div class="cart-item-info">
+                            <h3>
+                                <%= item.name %>
+                            </h3>
+                            <p>$<%= unitPrice.toFixed(2) %> each</p>
+                        </div>
+                        <div class="cart-item-actions">
+                            <form action="/cart/update" method="POST">
+                                <input type="hidden" name="menuItemId" value="<%= item.menuItemId %>">
+                                <input type="number" name="quantity" value="<%= quantity %>" min="1" max="10"
+                                    style="width: 60px;" onchange="this.form.submit()">
+                            </form>
+                            <form action="/cart/remove" method="POST"
+                                onsubmit="return confirm('Remove this item?')">
+                                <input type="hidden" name="menuItemId" value="<%= item.menuItemId %>">
+                                <button type="submit" class="btn btn-secondary"><span class="remove-btn">Remove</span></button>
+                            </form>
+                        </div>
+                        <div class="cart-item-total">
+                            <strong>$<%= (unitPrice * quantity).toFixed(2) %></strong>
+                        </div>
+                    </div>
+                    <% }); %>
+
+                        <div class="summary">
+                            <p>Subtotal: $<%= subtotal %>
+                            </p>
+                            <p>Tax (6%): $<%= tax %>
+                            </p>
+                            <p>Delivery Fee: $<%= deliveryFee %>
+                            </p>
+                            <p class="total">Total: $<%= total %>
+                            </p>
+                            <a href="/checkout" class="btn">Proceed to Checkout</a>
+                        </div>
+                        <% } %>
+    </main>
+
+<%- include('../partials/footer.ejs') %>

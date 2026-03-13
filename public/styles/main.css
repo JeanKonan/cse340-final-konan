@@ -35,6 +35,37 @@ main {
     padding: 20px;
     width: clamp(300px, 80%, 1200px);
     margin: 0 auto;
+
+    .btn {
+        display: inline-block;
+        background: var(--primary-color);
+        color: var(--background-color);
+        border: none;
+        padding: 5px 20px;
+        cursor: pointer;
+        border-radius: 15px;
+        text-decoration: none;
+        display: inline-block;
+        border: 2px solid transparent;
+        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+            color: var(--text-color);
+            border: 2px solid var(--text-color);
+            background: var(--background-color);
+        }
+    }
+}
+
+input[type="number"] {
+    width: 100px;
+    padding: 5px 10px;
+    /* margin-right: 10px; */
+    border-radius: 50px;
+    border: 1px solid var(--text-color);
+    text-align: center;
 }
 
 #home {
@@ -56,5 +87,3 @@ main {
         }
     }
 }
-
-

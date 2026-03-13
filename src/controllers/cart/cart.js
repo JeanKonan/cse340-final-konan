@@ -12,19 +12,21 @@ class CartController {
 
     static async showCart(req, res, next) {
         try {
-            CartController.initCart(req);
+            await CartController.initCart(req);
 
             const cart = req.session.cart;
 
-            const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const subtotal = cart.items.reduce((sum, item) => {
+                return sum + Number(item.price) * Number(item.quantity);
+            }, 0);
             const taxRate = 0.06;
             const tax = subtotal * taxRate;
             const deliveryFee = 4.99;
             const total = subtotal + tax + deliveryFee;
 
-            res.render('cart/view', {
+            res.render('cart/cart', {
                 title: 'Cart',
-                cart,
+                cart: cart.items,
                 subtotal: subtotal.toFixed(2),
                 tax: tax.toFixed(2),
                 deliveryFee: deliveryFee.toFixed(2),
@@ -38,7 +40,7 @@ class CartController {
 
     static async addToCart(req, res, next) {
         try {
-            CartController.initCart(req);
+            await CartController.initCart(req);
 
             const { menuItemId, quantity } = req.body;
             const menuItem = await MenuModel.getMenuItemById(menuItemId);
@@ -47,20 +49,27 @@ class CartController {
                 return res.status(404).json({ error: 'Menu item not found' });
             }
 
-            const existingItemIndex = req.session.cart.items.findIndex(item => item.menuItemId === menuItemId);
+            const normalizedMenuItemId = Number(menuItem.id);
+            const normalizedQuantity = Math.max(1, Number.parseInt(quantity, 10) || 1);
+            const normalizedPrice = Number(menuItem.price);
+
+            const existingItemIndex = req.session.cart.items.findIndex(item => Number(item.menuItemId) === normalizedMenuItemId);
 
             if (existingItemIndex > -1) {
-                req.session.cart.items[existingItemIndex].quantity += parseInt(quantity);
+                req.session.cart.items[existingItemIndex].quantity += normalizedQuantity;
             } else {
                 req.session.cart.items.push({
-                    menuItemId: menuItem.id,
+                    menuItemId: normalizedMenuItemId,
                     name: menuItem.name,
-                    price: menuItem.price,
-                    quantity: parseInt(quantity)
+                    price: normalizedPrice,
+                    quantity: normalizedQuantity
                 });
             }
 
-            res.redirect('/cart');
+            const fallbackUrl = '/menu';
+            const referer = req.get('referer') || fallbackUrl;
+            const redirectTarget = referer.includes('/cart') ? fallbackUrl : referer;
+            res.redirect(redirectTarget);
         } catch (error) {
             next(error);
         }
@@ -68,14 +77,16 @@ class CartController {
 
     static async updateCart(req, res, next) {
         try {
-            CartController.initCart(req);
+            await CartController.initCart(req);
 
             const { menuItemId, quantity } = req.body;
-            const itemIndex = req.session.cart.items.findIndex(item => item.menuItemId === menuItemId);
+            const normalizedMenuItemId = Number(menuItemId);
+            const normalizedQuantity = Number.parseInt(quantity, 10) || 0;
+            const itemIndex = req.session.cart.items.findIndex(item => Number(item.menuItemId) === normalizedMenuItemId);
 
             if (itemIndex > -1) {
-                if (quantity > 0) {
-                    req.session.cart.items[itemIndex].quantity = parseInt(quantity);
+                if (normalizedQuantity > 0) {
+                    req.session.cart.items[itemIndex].quantity = normalizedQuantity;
                 } else {
                     req.session.cart.items.splice(itemIndex, 1);
                 }
@@ -89,10 +100,11 @@ class CartController {
 
     static async removeFromCart(req, res, next) {
         try {
-            CartController.initCart(req);
+            await CartController.initCart(req);
             const { menuItemId } = req.body;
+            const normalizedMenuItemId = Number(menuItemId);
             
-            req.session.cart.items = req.session.cart.items.filter(item => item.menuItemId !== menuItemId);
+            req.session.cart.items = req.session.cart.items.filter(item => Number(item.menuItemId) !== normalizedMenuItemId);
 
             res.redirect('/cart');
         } catch (error) {

@@ -21,8 +21,8 @@
         <h4 id="logo"><a href="/">Yofe Eats</a></h4>
 
         <nav>
-            <a href="/offers">Offers</a>
-            <a href="/contact">Account</a>
-            <a href="/menu">Menu</a>
+            <a href="/offers" <% if (title === 'offers') { %>class="active"<% } %>>Offers</a>
+            <a href="/contact" <% if (title === 'contact') { %>class="active"<% } %>>Account</a>
+            <a href="/menu" <% if (title === 'Menu') { %>class="active"<% } %>>Menu</a>
         </nav>
     </header>

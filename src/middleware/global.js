@@ -39,6 +39,11 @@ const addLocalVariables = (req, res, next) => {
 
     res.locals.currentYear = new Date().getFullYear();
 
+    const cartItems = req.session?.cart?.items;
+    res.locals.cartItemCount = Array.isArray(cartItems)
+        ? cartItems.reduce((sum, item) => sum + (Number.parseInt(item.quantity, 10) || 0), 0)
+        : 0;
+
     setHeadAssetsFunctionality(res);
 
     next();
