@@ -5,7 +5,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: .2rem 2rem;
-    background-color: var(--primary-color-light);
+    background-color: var(--secondary-color-light);
     color: var(--text-color);
     /* border-top: 3px solid var(--secondary-color); */
 
@@ -29,10 +29,15 @@ header {
             /* font-weight: 800; */
             color: var(--text-color);
             padding: 5px 10px;
+            border-radius: 50px;
             border-bottom: 2px solid transparent;
 
             &:hover {
-                position: relative;
+                background: var(--text-color-light);
+                /* color: var(--background-color); */
+                transform: background-color 0.5s ease, color 0.5s ease;
+
+                /* position: relative;
 
                 &::after {
                     content: "";
@@ -43,10 +48,10 @@ header {
                     background: var(--text-color);
                     margin-top: 5px;
                     border-radius: 50px;
-                    /* top: 100%; */
+                    top: 100%;
                     left: 50%;
                     transform: translateX(-50%);
-                }
+                } */
             }
         }
 

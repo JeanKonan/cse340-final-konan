@@ -2,10 +2,12 @@
 
 :root {
     --primary-color: #A61B0F;
-    --primary-color-light: #0fa66c15;
+    --primary-color-light: #A61B0F15;
     --secondary-color: #0fa66c;
+    --secondary-color-light: #0fa66c15;
     --background-color: #F2F2F2;
     --text-color: #0c0c0c;
+    --text-color-light: #0c0c0c15;
     --font-family: 'Inria Serif', serif;
     --font-family-secondary: 'Red Hat Text', sans-serif;
 }
@@ -38,14 +40,15 @@ main {
 #home {
     width: 100%;
     padding: 0;
-    background-color: var(--primary-color-light);
+    background-color: var(--secondary-color-light);
     #hero {
 
         margin: 0 auto;
         
         h1 {
-            width: 80%;
+            /* width: 80%; */
             margin: 0 auto;
+            padding: 5rem;
             text-transform: capitalize;
             font-size: 5em;
             line-height: 5rem;

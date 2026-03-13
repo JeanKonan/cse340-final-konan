@@ -59,13 +59,13 @@
     color: var(--text-color);
 
     &:hover {
-        /* background: var(--primary-color); */
+        background: var(--text-color-light);
         /* color: var(--background-color); */
-        /* transform: background-color 0.5s ease, color 0.5s ease; */
+        transform: background-color 0.5s ease, color 0.5s ease;
 
-        position: relative;
+        /* position: relative; */
 
-        &::after {
+        /* &::after {
             content: "";
             position: absolute;
             display: block;
@@ -73,20 +73,24 @@
             height: 2px;
             background: var(--primary-color);
             margin-top: 5px;
-            /* border-radius: 50px; */
-            /* top: 100%; */
+            border-radius: 50px;
+            top: 100%;
             left: 50%;
             transform: translateX(-50%);
-        }
+        } */
     }
 }
 
 .category-filter a.active {
+    background: var(--text-color-light);
+    /* color: var(--background-color); */
+    transform: background-color 0.5s ease, color 0.5s ease;
+    
     /* background: var(--primary-color); */
-    color: var(--text-color);
-    position: relative;
+    /* color: var(--text-color); */
+    /* position: relative; */
 
-    &::after {
+    /* &::after {
         content: "";
         position: absolute;
         display: block;
@@ -94,9 +98,9 @@
         height: 2px;
         background: var(--primary-color);
         margin-top: 5px;
-        /* border-radius: 50px; */
-        /* top: 100%; */
+        border-radius: 50px;
+        top: 100%;
         left: 50%;
         transform: translateX(-50%);
-    }
+    } */
 }

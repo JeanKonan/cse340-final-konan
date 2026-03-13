@@ -11,6 +11,7 @@ import { startSessionCleanup } from './src/utils/session-cleanup.js';
 import { setupDatabase, testConnection } from './src/models/sql/setup.js';
 import menuRoutes from './src/controllers/menu/routes.js';
 import router from './src/controllers/index.js';
+import { addLocalVariables } from './src/middleware/global.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +54,7 @@ app.use(session({
     }
 }));
 
+app.use(addLocalVariables);
 
 
 app.use('/menu', menuRoutes);
