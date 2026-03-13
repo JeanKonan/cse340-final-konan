@@ -25,7 +25,13 @@ const setupDatabase = async () => {
         hasData = false;
     }
 
-    if (!hasData) {
+    const forceSeed = process.env.FORCE_RESEED === 'true';
+
+    if (!hasData || forceSeed) {
+        if (forceSeed) {
+            console.log('Force reseed: clearing existing category and menu data...');
+            await db.query('TRUNCATE categories RESTART IDENTITY CASCADE');
+        }
         console.log('Seeding database...');
         const seedPath = path.join(__dirname, 'seed.sql');
         const seedSQL = fs.readFileSync(seedPath, 'utf8');

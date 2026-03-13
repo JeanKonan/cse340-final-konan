@@ -17,7 +17,8 @@
   "scripts": {
     "start": "node --env-file=.env server.js",
     "dev": "nodemon --env-file=.env server.js",
-    "setup-db": "node src/models/sql/setup.js"
+    "setup-db": "node src/models/sql/setup.js",
+    "reseed": "node --env-file=.env src/models/sql/reseed.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

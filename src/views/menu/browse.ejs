@@ -17,6 +17,9 @@
             <div class="menu-grid">
                 <% menuItems.forEach(item=> { %>
                     <div class="menu-item">
+                        <% if (item.image_path) { %>
+                            <img src="<%= item.image_path %>" alt="<%= item.image_alt || item.name %>" class="menu-item-img">
+                        <% } %>
                         <h3>
                             <%= item.name %>
                         </h3>
