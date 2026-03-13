@@ -23,20 +23,22 @@
                         <h3>
                             <%= item.name %>
                         </h3>
-                        <p>
+                        <p class="menu-item-description">
                             <%= item.description %>
                         </p>
                         <p class="price">$<%= item.price %>
                         </p>
-                        <% if (item.available) { %>
-                            <form action="/cart/add" method="POST">
-                                <input type="hidden" name="menuItemId" value="<%= item.id %>">
-                                <input type="number" name="quantity" value="1" min="1" max="10" style="width: 60px;">
-                                <button type="submit" class="btn"><span class="plus-btn">+</span></button>
-                            </form>
+                        <div class="menu-item-action">
+                            <% if (item.available) { %>
+                                <form action="/cart/add" method="POST">
+                                    <input type="hidden" name="menuItemId" value="<%= item.id %>">
+                                    <input type="number" name="quantity" value="1" min="1" max="10">
+                                    <button type="submit" class="btn"><span class="plus-btn">+</span></button>
+                                </form>
                             <% } else { %>
                                 <span>Unavailable</span>
-                                <% } %>
+                            <% } %>
+                        </div>
                     </div>
                     <% }); %>
             </div>

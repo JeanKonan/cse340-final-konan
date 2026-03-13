@@ -15,13 +15,48 @@
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
     .menu-item-img {
         width: 100%;
         height: 150px;
         object-fit: cover;
         border-radius: 8px;
-        margin-bottom: 10px;
+    }
+
+    h3,
+    p {
+        margin: 0;
+    }
+
+    .menu-item-description {
+        line-height: 1.5;
+        min-height: 4.5em;
+        max-height: 4.5em;
+        overflow: hidden;
+    }
+
+    .menu-item-action {
+        margin-top: auto;
+        padding-top: 8px;
+    }
+
+    form {
+        display: flex;
+        align-items:center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    input[type="number"] {
+        width: 100px;
+        padding: 5px 10px;
+        /* margin-right: 10px; */
+        border-radius: 50px;
+        border: 1px solid var(--text-color);
+        text-align: center;
     }
 }
 
@@ -29,6 +64,7 @@
     font-size: 1.2em;
     color: var(--primary-color);
     font-weight: bold;
+    margin-bottom: 0;
 }
 
 .btn {
@@ -38,13 +74,12 @@
     border: none;
     /* width: 40px;
     height: 40px; */
-    padding: 5px 15px;
+    padding: 5px 20px;
     cursor: pointer;
     border-radius: 15px;
     text-decoration: none;
     display: inline-block;
     border: 1px solid transparent;
-    float: inline-end;
     bottom: 0;
 
     .plus-btn {
