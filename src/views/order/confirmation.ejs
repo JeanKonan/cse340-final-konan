@@ -1,0 +1,33 @@
+<%- include('../partials/header.ejs') %>
+
+<main id="confirmation">
+    <h1>Order Confirmation</h1>
+    <a href="/menu" class="btn back">← Menu</a>
+    <p>Thank you, <%= order.customer_name %> for your order!</p>
+
+    <h2>Order Details</h2>
+    <div class="order-number">
+        Order #: <strong><%= order.order_number %></strong>
+    </div>
+    <p>
+        We have received your order and are preparing it for you. You will receive an email confirmation shortly at <strong><%= order.customer_email %></strong>.
+    </p>
+    <p>
+        Please allow up to 30 minutes for delivery or pickup. If you have any questions, please contact us at <a href="mailto:info@company.com">info@company.com</a>.
+    </p>
+
+    <% if (!order.pickup) { %>
+        <p>
+            Your order will be delivered to: <strong><%= order.delivery_address_street %>, <%= order.delivery_address_city %></strong>
+        </p>
+    <% } else { %>
+        <p>
+            Your order will be ready for pickup at our location. We look forward to seeing you!
+        </p>
+    <% } %>
+    
+    <a href="/tracking/<%= order.order_number %>" class="btn">Track Your Order</a>
+
+</main>
+
+<%- include('../partials/footer.ejs') %>

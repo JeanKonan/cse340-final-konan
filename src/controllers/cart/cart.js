@@ -21,15 +21,15 @@ class CartController {
             }, 0);
             const taxRate = 0.06;
             const tax = subtotal * taxRate;
-            const deliveryFee = 4.99;
-            const total = subtotal + tax + deliveryFee;
+            // const deliveryFee = 4.99;
+            const total = subtotal + tax; // + deliveryFee;
 
             res.render('cart/cart', {
                 title: 'Cart',
                 cart: cart.items,
                 subtotal: subtotal.toFixed(2),
                 tax: tax.toFixed(2),
-                deliveryFee: deliveryFee.toFixed(2),
+                // deliveryFee: deliveryFee.toFixed(2),
                 total: total.toFixed(2),
                 user: req.session.user || null
             });

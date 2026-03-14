@@ -41,6 +41,7 @@ main {
         background: var(--primary-color);
         color: var(--background-color);
         border: none;
+        align-items: center;
         padding: 5px 20px;
         cursor: pointer;
         border-radius: 15px;

@@ -1,0 +1,36 @@
+main#checkout {
+    width: 70%;
+    margin: 50px auto;
+    
+    .form-group {
+        margin: 15px 0;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    input,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--background-color);
+        border-radius: 4px;
+    }
+    
+    .btn {
+        font-size: 1.2em;
+        line-height: 1;   
+    }
+    .summary {
+        background: var(--background-color);
+        padding: 15px;
+        margin: 20px 0;
+    }
+}
+
+.floating-cart {
+    display: none !important;
+}

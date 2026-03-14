@@ -1,0 +1,29 @@
+main#confirmation {
+    width: 50%;
+    margin: 50px auto;
+
+    .success {
+        color: var(--secondary-color);
+        font-size: 3em;
+    }
+    
+    .order-number {
+        background: var(--background-color);
+        padding: 20px;
+        margin: 20px 0;
+        font-size: 1.3em;
+    }
+    
+    .btn {
+        width: 150px;
+    }
+
+    .back {
+        width: 80px;
+    }
+}
+
+
+.floating-cart {
+    display: none !important;
+}
