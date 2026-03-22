@@ -4,6 +4,8 @@ import connectPgSimple from 'connect-pg-simple';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 import { caCert } from './src/models/sql/db.js';
 import { startSessionCleanup } from './src/utils/session-cleanup.js';
@@ -23,6 +25,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 const PgSession = connectPgSimple(session);
+const server = createServer(app);
+const io = new Server(server);
 
 // View engine setup
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,13 +63,11 @@ app.use(session({
 
 app.use(addLocalVariables);
 
-
 app.use('/menu', menuRoutes);
 app.use('/cart', cartRoutes);
 app.use('/checkout', orderRoutes);
 app.use('/order', orderRoutes);
 app.use('/', router);
-
 
 // test routes
 app.get('/test', (req, res) => {
@@ -75,8 +77,25 @@ app.get('/test', (req, res) => {
 // Start session cleanup task
 startSessionCleanup();
 
+// Socket.io connection
+io.on('connection', (socket) => {
+    console.log('Client connected:', socket.id);
+
+    socket.on('joinOrder', (orderNumber) => {
+        socket.join(`order_${orderNumber}`);
+        console.log(`Client joined order: ${orderNumber}`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+// Make io available to routes
+app.set('io', io);
+
 // Initialize database and start server
-app.listen(PORT, async () => {
+server.listen(PORT, async () => {
     await setupDatabase();
     await testConnection();
     console.log(`Server is running on http://127.0.0.1:${PORT}`);

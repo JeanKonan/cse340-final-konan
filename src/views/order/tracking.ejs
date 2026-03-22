@@ -1,0 +1,65 @@
+<%- include ('../partials/header.ejs') %>
+    <main id="order-tracking" data-order-number="<%= order.order_number %>">
+        <h1>Track Order #<%= order.order_number %>
+        </h1>
+
+        <div class="order-info">
+            <p><strong>Customer:</strong>
+                <%= order.customer_name %>
+            </p>
+            <p>
+                <% if (!order.pickup) { %>
+                    <strong>Delivery:</strong>
+                    <%= order.delivery_address_street %>, <%= order.delivery_address_city %>
+                            <% } else { %>
+                                <strong>Pickup:</strong> Order will be ready for pickup at our location.
+                                <% } %>
+            </p>
+            <p><strong>Status:</strong> <span id="current-status">
+                    <%= order.status %>
+                </span></p>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-step <%= order.status === 'Placed' ? 'active' : '' %>">
+                Placed
+                <% if (['Preparing','Out for Delivery','Delivered'].includes(order.status)) { %>
+                    <span class="check">✔</span>
+                <% } %>
+            </div>
+            <div class="status-step <%= order.status === 'Preparing' ? 'active' : '' %>">
+                Preparing
+                <% if (['Out for Delivery','Delivered'].includes(order.status)) { %>
+                    <span class="check">✔</span>
+                <% } %>
+            </div>
+            <div class="status-step <%= order.status === 'Out for Delivery' ? 'active' : '' %>">
+                On the Way
+                <% if (order.status==='Delivered' ) { %>
+                    <span class="check">✔</span>
+                <% } %>
+            </div>
+            <div class="status-step <%= order.status === 'Delivered' ? 'active' : '' %>">
+                Delivered
+            </div>
+        </div>
+
+        <h2>Order Timeline</h2>
+        <div class="timeline" id="timeline">
+            <% tracking.forEach(t=> { %>
+                <div class="timeline-item">
+                    <strong>
+                        <%= t.status %>
+                    </strong> - <%= new Date(t.updated_at).toLocaleString() %>
+                        <% if (t.notes) { %>
+                            <p>
+                                <%= t.notes %>
+                            </p>
+                            <% } %>
+                </div>
+                <% }); %>
+        </div>
+
+    </main>
+
+    <%- include ('../partials/footer.ejs') %>

@@ -1,4 +1,5 @@
 import OrderModel from "../../models/order.js";
+import { startOrderSimulation } from "../../utils/orderSimulator.js";
 
 class OrderController {
     static async showCheckout(req, res, next) {
@@ -80,7 +81,9 @@ class OrderController {
             });
 
             req.session.cart = { items: [], total: 0 };
+            const io = req.app.get('io');
             res.redirect(`/order/confirmation/${order.orderNumber}`);
+            startOrderSimulation(io, order.id, order.orderNumber);
         } catch (error) {
             next(error);
         }
@@ -94,6 +97,25 @@ class OrderController {
             res.render('order/confirmation', {
                 title: 'Order Confirmation',
                 order,
+                user: req.session.user || null
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async showTracking(req, res, next) {
+        try {
+            const orderNumber = (req.params.orderNumber || '').trim();
+            const order = await OrderModel.getOrderByNumber(orderNumber);
+            if (!order) return res.status(404).send('Order not found');
+
+            const tracking = await OrderModel.getOrderTracking(order.id);
+
+            res.render('order/tracking', {
+                title: 'Order Tracking',
+                order,
+                tracking,
                 user: req.session.user || null
             });
         } catch (error) {

@@ -1,0 +1,46 @@
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+}
+
+.status-step {
+    flex: 1;
+    text-align: center;
+    padding: 20px 25px;
+    background: var(--background-color);
+    margin: 0;
+    border-radius: 8px;
+    position: relative;
+
+    &.active {
+        background: var(--secondary-color);
+        color: var(--background-color);
+        font-weight: bold;
+    }
+
+    .check {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 8px;
+        padding: 1px 5px;
+        border-radius: 5px;
+        color: var(--secondary-color);
+    }
+}
+
+.order-info {
+    background: var(--background-color);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.timeline {
+    margin: 30px 0;
+}
+
+.timeline-item {
+    padding: 15px;
+    border-left: 3px solid var(--secondary-color);
+    margin: 10px 0;
+}

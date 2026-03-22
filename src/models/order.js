@@ -134,7 +134,7 @@ class OrderModel {
                         'unitPrice', oi.unit_price)) AS items
                 FROM orders o
                 LEFT JOIN order_items oi ON o.id = oi.order_id
-                WHERE o.order_number = $1
+                WHERE UPPER(TRIM(o.order_number)) = UPPER(TRIM($1))
                 GROUP BY o.id
             `;
 
