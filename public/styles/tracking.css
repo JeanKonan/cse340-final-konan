@@ -2,6 +2,8 @@
     display: flex;
     justify-content: space-between;
     margin: 30px 0;
+    background-color: var(--background-color);
+    border-radius: 8px;
 }
 
 .status-step {
@@ -43,4 +45,10 @@
     padding: 15px;
     border-left: 3px solid var(--secondary-color);
     margin: 10px 0;
+}
+
+@media screen and (max-width: 500px) {
+    .status-bar {
+        flex-direction: column;
+    }
 }
