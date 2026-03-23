@@ -69,6 +69,12 @@ input[type="number"] {
     text-align: center;
 }
 
+input:not([type="number"]) {
+    padding: 10px 10px;
+    border: 1px solid var(--text-color);
+    border-radius: 50px;
+}
+
 #home {
     width: 100%;
     padding: 0;

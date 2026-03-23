@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/styles/footer.css">
     <%- renderStyles() %>
     <%- renderScripts() %>
-    <title>Yofe Eats</title>
+    <title><%= title %></title>
 </head>
 <body>
     <header>
@@ -21,8 +21,17 @@
         <h4 id="logo"><a href="/">Yofe Eats</a></h4>
 
         <nav>
-            <a href="/offers" <% if (title === 'offers') { %>class="active"<% } %>>Offers</a>
-            <a href="/contact" <% if (title === 'contact') { %>class="active"<% } %>>Account</a>
             <a href="/menu" <% if (title === 'Menu') { %>class="active"<% } %>>Menu</a>
+            <a href="/contact" <% if (title === 'Contact') { %>class="active"<% } %>>Contact</a>
+
+            <% if (user) { %>
+                <a href="/account/myorders" <% if (title === 'My orders') { %>class="active"<% } %>>myOrders</a>
+                <form method="POST" action="/account/logout" style="display: inline;">
+                    <button type="submit">Logout</button>
+                </form>
+            <% } else { %>
+                <a href="/account/login" <% if (title === 'Login') { %>class="active"<% } %>>Login</a>
+                <a href="/account/register" <% if (title === 'Register') { %>class="active"<% } %>>Register</a>
+            <% } %>
         </nav>
     </header>

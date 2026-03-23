@@ -1,0 +1,48 @@
+main#login-form {
+
+    .form-group {
+        margin: 15px 0;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 80%;
+    }
+
+    .error {
+        width: 80%;
+        color: var(--primary-color);
+        padding: 10px;
+        background: var(--background-color);
+        margin: 10px 0;
+    }
+}
+
+
+main#register-form {
+
+    .form-group {
+        margin: 15px 0;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 80%;
+    }
+
+    .error {
+        width: 80%;
+        color: var(--primary-color);
+        padding: 10px;
+        background: var(--background-color);
+        margin: 10px 0;
+    }
+}

@@ -14,6 +14,7 @@ import { setupDatabase, testConnection } from './src/models/sql/setup.js';
 import menuRoutes from './src/controllers/menu/routes.js';
 import cartRoutes from './src/controllers/cart/routes.js';
 import orderRoutes from './src/controllers/order/routes.js';
+import accountRoutes from './src/controllers/account/routes.js';
 
 import router from './src/controllers/index.js';
 import { addLocalVariables } from './src/middleware/global.js';
@@ -67,6 +68,7 @@ app.use('/menu', menuRoutes);
 app.use('/cart', cartRoutes);
 app.use('/checkout', orderRoutes);
 app.use('/order', orderRoutes);
+app.use('/account', accountRoutes);
 app.use('/', router);
 
 // test routes
