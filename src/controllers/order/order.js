@@ -82,6 +82,16 @@ class OrderController {
 
             req.session.cart = { items: [], total: 0 };
             const io = req.app.get('io');
+
+            io.to('kitchen').emit('newOrder', {
+                id: order.id,
+                orderNumber: order.orderNumber,
+                customerName,
+                total,
+                status: 'Placed',
+                itemsSummary: cart.map((item) => `${item.quantity}x ${item.name}`).join(', ')
+            });
+
             res.redirect(`/order/confirmation/${order.orderNumber}`);
             startOrderSimulation(io, order.id, order.orderNumber);
         } catch (error) {

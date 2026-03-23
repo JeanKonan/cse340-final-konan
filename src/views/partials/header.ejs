@@ -24,11 +24,26 @@
             <a href="/menu" <% if (title === 'Menu') { %>class="active"<% } %>>Menu</a>
             <a href="/contact" <% if (title === 'Contact') { %>class="active"<% } %>>Contact</a>
 
-            <% if (user) { %>
+            <% if (user && user.role === 'admin') { %>
+                <a href="/admin/menu" <% if (title === 'Admin Menu Management' || title === 'Add Menu Item' || title === 'Edit Menu Item') { %>class="active"<% } %>>Admin</a>
+                <a href="/kitchen" <% if (title === 'Kitchen Dashboard') { %>class="active"<% } %>>Kitchen</a>
                 <a href="/account/myorders" <% if (title === 'My orders') { %>class="active"<% } %>>myOrders</a>
-                <form method="POST" action="/account/logout" style="display: inline;">
+                <form method="POST" action="/account/logout">
                     <button type="submit">Logout</button>
                 </form>
+
+            <% } else if (user && user.role === 'kitchen') { %>
+                <a href="/kitchen" <% if (title === 'Kitchen Dashboard') { %>class="active"<% } %>>Kitchen</a>
+                <form method="POST" action="/account/logout">
+                    <button type="submit">Logout</button>
+                </form>
+
+            <% } else if (user) { %>
+                <a href="/account/myorders" <% if (title === 'My orders') { %>class="active"<% } %>>myOrders</a>
+                <form method="POST" action="/account/logout">
+                    <button type="submit">Logout</button>
+                </form>
+                
             <% } else { %>
                 <a href="/account/login" <% if (title === 'Login') { %>class="active"<% } %>>Login</a>
                 <a href="/account/register" <% if (title === 'Register') { %>class="active"<% } %>>Register</a>

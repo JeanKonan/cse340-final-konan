@@ -1,6 +1,36 @@
 import db from './sql/db.js';
 
 class OrderModel {
+    static async getKitchenOrders() {
+
+        try {
+            const query = `
+                SELECT
+                    o.id,
+                    o.order_number,
+                    o.customer_name,
+                    o.total,
+                    o.status,
+                    o.created_at,
+                    COALESCE(
+                        string_agg(CONCAT(oi.quantity, 'x ', m.name), ', ' ORDER BY m.name),
+                        ''
+                    ) AS items_summary
+                FROM orders o
+                LEFT JOIN order_items oi ON o.id = oi.order_id
+                LEFT JOIN menu_items m ON oi.menu_item_id = m.id
+                WHERE o.status <> 'Delivered'
+                GROUP BY o.id
+                ORDER BY o.created_at DESC
+            `;
+
+            const result = await db.query(query);
+            return result.rows;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async createOrder(orderData) {
 
         // const client = await db.connect();
@@ -165,12 +195,19 @@ class OrderModel {
     static async updateOrderStatus(orderId, status) {
 
         try {
+            await db.query('BEGIN');
+
             const query = `
                 UPDATE orders
                 SET status = $1, updated_at = NOW()
                 WHERE id = $2
+                RETURNING id, order_number, status
             `;
             const result = await db.query(query, [status, orderId]);
+
+            if (!result.rows[0]) {
+                throw new Error('Order not found');
+            }
 
             await db.query(`
                 INSERT INTO order_tracking (
@@ -182,6 +219,7 @@ class OrderModel {
             `, [orderId, status]);
 
             await db.query('COMMIT');
+            return result.rows[0];
         } catch (error) {
             await db.query('ROLLBACK');
             throw error;

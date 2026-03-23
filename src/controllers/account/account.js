@@ -65,6 +65,7 @@ class AccountController {
                 console.error('Session destroy error:', err);
                 return res.status(500).send('Error during logout');
             }
+            res.clearCookie('connect.sid');
             res.redirect('/account/login');
         });
     }

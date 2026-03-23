@@ -33,11 +33,20 @@ const addLocalVariables = (req, res, next) => {
     res.locals.queryParams = { ...req.query };
 
     res.locals.isLoggedIn = false;
+    res.locals.user = null;
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
+        res.locals.user = req.session.user;
     }
 
     res.locals.currentYear = new Date().getFullYear();
+
+    // Prevent browsers from caching server-rendered pages that contain session state.
+    if (req.accepts('html')) {
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
+    }
 
     const cartItems = req.session?.cart?.items;
     res.locals.cartItemCount = Array.isArray(cartItems)

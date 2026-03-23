@@ -49,6 +49,10 @@ class CartController {
                 return res.status(404).json({ error: 'Menu item not found' });
             }
 
+            if (!menuItem.available) {
+                return res.status(400).json({ error: 'This item is currently unavailable' });
+            }
+
             const normalizedMenuItemId = Number(menuItem.id);
             const normalizedQuantity = Math.max(1, Number.parseInt(quantity, 10) || 1);
             const normalizedPrice = Number(menuItem.price);

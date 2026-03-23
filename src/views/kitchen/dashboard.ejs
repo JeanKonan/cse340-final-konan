@@ -1,0 +1,84 @@
+<%- include('../partials/header.ejs') %>
+
+<main id="kitchen-dashboard" data-status-options='<%- JSON.stringify(statuses) %>'>
+    <h1>Kitchen Dashboard</h1>
+    <p>Live queue for kitchen staff. New orders appear automatically.</p>
+
+    <% if (message) { %>
+        <p class="status-message status-success"><%= message %></p>
+    <% } %>
+    <% if (error) { %>
+        <p class="status-message status-error"><%= error %></p>
+    <% } %>
+
+    <section>
+        <h2>Incoming Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody id="orders-table-body">
+                <% orders.forEach(order => { %>
+                    <tr data-order-id="<%= order.id %>">
+                        <td><%= order.order_number %></td>
+                        <td><%= order.customer_name %></td>
+                        <td><%= order.items_summary || '' %></td>
+                        <td>$<%= Number(order.total).toFixed(2) %></td>
+                        <td class="order-status"><%= order.status %></td>
+                        <td>
+                            <form method="POST" action="/kitchen/orders/<%= order.id %>/status" class="inline-form">
+                                <select name="status" required>
+                                    <% statuses.forEach(option => { %>
+                                        <option value="<%= option %>" <%= order.status === option ? 'selected' : '' %>><%= option %></option>
+                                    <% }); %>
+                                </select>
+                                <button type="submit" class="btn">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Stock Controls</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Current Availability</th>
+                    <th>Set Availability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% menuItems.forEach(item => { %>
+                    <tr>
+                        <td><%= item.name %></td>
+                        <td><%= item.category_name || 'Uncategorized' %></td>
+                        <td><%= item.available ? 'Available' : 'Unavailable' %></td>
+                        <td>
+                            <form method="POST" action="/kitchen/menu/<%= item.id %>/availability" class="inline-form">
+                                <select name="available" required>
+                                    <option value="true" <%= item.available ? 'selected' : '' %>>Available</option>
+                                    <option value="false" <%= !item.available ? 'selected' : '' %>>Unavailable</option>
+                                </select>
+                                <button type="submit" class="btn">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<%- include('../partials/footer.ejs') %>

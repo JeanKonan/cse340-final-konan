@@ -1,0 +1,136 @@
+<%- include('../partials/header.ejs') %>
+
+    <main id="admin-menu-list">
+        <h1>
+            <%= title %>
+        </h1>
+        <p>Logged in as: <%= user.name %> (<%= user.role %>) | <a href="/menu">View Menu</a></p>
+
+        <nav class="admin-submenu">
+            <a href="/admin/menu?section=menu" class="<%= section === 'menu' ? 'active' : '' %>">Menu Items</a>
+            <a href="/admin/menu?section=categories" class="<%= section === 'categories' ? 'active' : '' %>">Categories</a>
+            <a href="/admin/menu?section=roles" class="<%= section === 'roles' ? 'active' : '' %>">Roles</a>
+        </nav>
+
+        <% if (message) { %>
+            <p class="status-message status-success"><%= message %></p>
+        <% } %>
+        <% if (error) { %>
+            <p class="status-message status-error"><%= error %></p>
+        <% } %>
+
+        <% if (section === 'menu') { %>
+            <h2>Manage Menu Items</h2>
+            <a href="/admin/menu/add" class="btn">+ Add New Item</a>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                </tr>
+                <% menuItems.forEach(item=> { %>
+                    <tr>
+                        <td><%= item.id %></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.category_name %></td>
+                        <td>$<%= item.price %></td>
+                        <td><%= item.available ? 'Yes' : 'No' %></td>
+                        <td>
+                            <a href="/admin/menu/edit/<%= item.id %>" class="btn btn-secondary">Edit</a>
+                            <form method="POST" action="/admin/menu/delete/<%= item.id %>" style="display: inline;" onsubmit="return confirm('Delete this item?')">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        <% } %>
+
+        <% if (section === 'categories') { %>
+            <h2>Manage Categories</h2>
+
+            <form method="POST" action="/admin/categories" class="admin-inline-form">
+                <input type="text" name="name" placeholder="Category name" required>
+                <input type="text" name="description" placeholder="Description">
+                <input type="number" name="displayOrder" placeholder="Display order" min="0" value="0" required>
+                <button type="submit" class="btn">Add Category</button>
+            </form>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Display Order</th>
+                    <th>Actions</th>
+                </tr>
+                <% categories.forEach(category => { %>
+                    <tr>
+                        <td><%= category.id %></td>
+                        <td><%= category.name %></td>
+                        <td><%= category.description || '' %></td>
+                        <td><%= category.display_order %></td>
+                        <td>
+                            <form method="POST" action="/admin/categories/edit/<%= category.id %>" class="admin-inline-form">
+                                <input type="text" name="name" value="<%= category.name %>" required>
+                                <input type="text" name="description" value="<%= category.description || '' %>">
+                                <input type="number" name="displayOrder" value="<%= category.display_order %>" min="0" required>
+                                <button type="submit" class="btn btn-secondary">Update</button>
+                            </form>
+                            <form method="POST" action="/admin/categories/delete/<%= category.id %>" style="display: inline;" onsubmit="return confirm('Delete this category? Menu items in this category will become uncategorized.')">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        <% } %>
+
+        <% if (section === 'roles') { %>
+            <h2>Manage User Roles</h2>
+
+            <h3>Add Staff Account</h3>
+            <form method="POST" action="/admin/users" class="admin-inline-form">
+                <input type="text" name="name" placeholder="Full name" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Temporary password" required>
+                <input type="text" name="phone" placeholder="Phone (optional)">
+                <select name="role" required>
+                    <option value="kitchen">kitchen</option>
+                    <option value="admin">admin</option>
+                </select>
+                <button type="submit" class="btn">Add Staff</button>
+            </form>
+
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Change Role</th>
+                </tr>
+                <% users.forEach(account => { 
+                    if (account.role !== 'customer') { %>
+                    <tr>
+                        <td><%= account.name %></td>
+                        <td><%= account.email %></td>
+                        <td><%= account.role %></td>
+                        <td>
+                            <form method="POST" action="/admin/users/<%= account.id %>/role" class="admin-inline-form">
+                                <select name="role" required>
+                                    <option value="kitchen" <%= account.role === 'kitchen' ? 'selected' : '' %>>kitchen</option>
+                                    <option value="admin" <%= account.role === 'admin' ? 'selected' : '' %>>admin</option>
+                                </select>
+                                <button type="submit" class="btn btn-secondary">Save Role</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }
+            }); %>
+            </table>
+        <% } %>
+    </main>

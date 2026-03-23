@@ -1,0 +1,115 @@
+main#admin-menu-list {
+    .admin-submenu {
+        display: flex;
+        gap: 10px;
+        margin: 14px 0 18px;
+        flex-wrap: wrap;
+    }
+
+    .admin-submenu a {
+        padding: 8px 12px;
+        border: 1px solid var(--text-color);
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    .admin-submenu a.active {
+        background: var(--secondary-color);
+        color: white;
+    }
+
+    h2 {
+        margin-top: 18px;
+    }
+
+    h3 {
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+
+    .status-message {
+        margin: 12px 0;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .status-success {
+        background: #e5f6ea;
+        color: #1f6e3f;
+        border: 1px solid #bde7c9;
+    }
+
+    .status-error {
+        background: #fde8e8;
+        color: #8a1f1f;
+        border: 1px solid #f5c5c5;
+    }
+
+    .admin-inline-form {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 4px 0;
+    }
+
+    .admin-inline-form input,
+    .admin-inline-form select {
+        padding: 6px 8px;
+        border: 1px solid var(--text-color);
+        border-radius: 6px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th,
+    td {
+        border: 1px solid var(--text-color);
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background: var(--background-color);
+    }
+
+    .btn-secondary {
+        background: var(--secondary-color);
+
+        &:hover {
+            background: var(--background-color);
+        }
+    }
+
+    .btn-danger {
+        background: var(--primary-color);
+
+        &:hover {
+            background: var(--background-color);
+        }
+    }
+}
+
+main#admin-menu-form {
+    .form-group {
+        margin: 15px 0;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    textarea,
+    select {
+        width: 80%;
+        padding: 8px;
+        border: 1px solid var(--text-color);
+        border-radius: 8px;
+    }
+}

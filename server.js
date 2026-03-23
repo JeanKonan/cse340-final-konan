@@ -15,6 +15,8 @@ import menuRoutes from './src/controllers/menu/routes.js';
 import cartRoutes from './src/controllers/cart/routes.js';
 import orderRoutes from './src/controllers/order/routes.js';
 import accountRoutes from './src/controllers/account/routes.js';
+import adminRoutes from './src/controllers/admin/routes.js';
+import kitchenRoutes from './src/controllers/kitchen/routes.js';
 
 import router from './src/controllers/index.js';
 import { addLocalVariables } from './src/middleware/global.js';
@@ -69,6 +71,8 @@ app.use('/cart', cartRoutes);
 app.use('/checkout', orderRoutes);
 app.use('/order', orderRoutes);
 app.use('/account', accountRoutes);
+app.use('/admin', adminRoutes);
+app.use('/kitchen', kitchenRoutes);
 app.use('/', router);
 
 // test routes
@@ -86,6 +90,11 @@ io.on('connection', (socket) => {
     socket.on('joinOrder', (orderNumber) => {
         socket.join(`order_${orderNumber}`);
         console.log(`Client joined order: ${orderNumber}`);
+    });
+
+    socket.on('joinKitchen', () => {
+        socket.join('kitchen');
+        console.log(`Client joined kitchen room: ${socket.id}`);
     });
 
     socket.on('disconnect', () => {

@@ -43,5 +43,10 @@ header {
                 border-color: var(--text-color);
             }
         }
+
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
     }
 }

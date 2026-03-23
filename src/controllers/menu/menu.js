@@ -6,7 +6,7 @@ class MenuController {
             const { category } = req.query;
             const menuItems = category
                 ? await MenuModel.filterByCategory(category)
-                : await MenuModel.getMenuItems();
+                : await MenuModel.getAvailableMenuItems();
 
             const categories = await MenuModel.getCategories();
 

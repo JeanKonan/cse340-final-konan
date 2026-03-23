@@ -1,6 +1,24 @@
 import db from './sql/db.js';
 
 class MenuModel {
+    static async getAvailableMenuItems() {
+        try {
+            const query = `
+                SELECT m.*, c.name AS category_name
+                FROM menu_items m
+                LEFT JOIN categories c ON m.category_id = c.id
+                WHERE m.active = true AND m.available = true
+                ORDER BY c.name, m.name
+            `;
+            const result = await db.query(query);
+
+            return result.rows;
+        } catch (error) {
+            console.error('Error fetching available menu items:', error);
+            throw error;
+        }
+    }
+
     static async getMenuItems () {
         try {
             const query = `
@@ -57,7 +75,7 @@ class MenuModel {
             const query = `
                 SELECT *
                 FROM menu_items
-                WHERE category_id = $1 AND active = true
+                WHERE category_id = $1 AND active = true AND available = true
                 ORDER BY name
             `;
             const result = await db.query(query, [categoryId]);

@@ -47,12 +47,19 @@ INSERT INTO menu_items (category_id, name, description, price, image_path, image
 
 -- Admin user (password: admin123)
 INSERT INTO users (name, email, password_hash, role) VALUES
-('Admin User', 'admin@fastfood.com', '$2b$10$rZ0VD.KZ5JcdJqHvF5K8P.NQYZJHvGq8jKqF5ZqW8jfvL6YOeKhNe', 'admin')
-ON CONFLICT (email) DO NOTHING;
+('Admin User', 'admin@fastfood.com', '$2b$10$bPVTgJsWTeGXHchE/aShEOSQY8c6Ip01KVIncaQmTK.qSZoZyL1y2', 'admin')
+ON CONFLICT (email) DO UPDATE SET
+	name = EXCLUDED.name,
+	password_hash = EXCLUDED.password_hash,
+	role = EXCLUDED.role;
 
 -- Test customer (password: test123)
 INSERT INTO users (name, email, password_hash, phone, role) VALUES
-('Test Customer', 'customer@test.com', '$2b$10$8K1p/a0dL6RT/YPPy7JFHOHmGGZ0KVp0kFqLBGvX8aPPWcXRYcEJm', '555-0100', 'customer')
-ON CONFLICT (email) DO NOTHING;
+('Test Customer', 'customer@test.com', '$2b$10$ZSAV2xClWpPLZnOJGWgvT./GsSQA3dfpLPte9Q742KObdgMDZtw8u', '555-0100', 'customer')
+ON CONFLICT (email) DO UPDATE SET
+	name = EXCLUDED.name,
+	password_hash = EXCLUDED.password_hash,
+	phone = EXCLUDED.phone,
+	role = EXCLUDED.role;
 
 COMMIT;
