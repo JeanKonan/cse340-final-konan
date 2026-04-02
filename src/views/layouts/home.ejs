@@ -1,11 +1,125 @@
 <%- include('../partials/header.ejs') %>
 
-    <main id="home">
-        
-        <div id="hero">
-            <h1>Eating will now feel differents</h1>
-            <!-- <p>Discover delicious meals delivered right to your door.</p> -->
+<main id="home">
+    <section class="home-hero">
+        <div class="hero-copy">
+            <p class="eyebrow">Yofe Eats</p>
+            <h1>Bold flavors delivered with style.</h1>
+            <p class="hero-subtext">
+                Discover modern West African inspired dishes, fresh ingredients, and fast delivery built for busy days.
+            </p>
+            <div class="hero-actions">
+                <a class="btn" href="/menu">Order Now</a>
+                <a class="btn-outline" href="/account/register">Create Account</a>
+            </div>
         </div>
-    </main>
+
+        <div class="hero-visual" aria-hidden="true">
+            <span class="shape shape-a"></span>
+            <span class="shape shape-b"></span>
+            <span class="shape shape-c"></span>
+
+            <img src="/images/shaded-onions.png" alt="" class="food-img img-onions-shaded">
+            <img src="/images/onions-sliced.png" alt="" class="food-img img-onions-sliced">
+            <img src="/images/tomatoes.png" alt="" class="food-img img-tomatoes">
+        </div>
+    </section>
+
+    <section class="home-categories" aria-label="Browse by category">
+        <h2>Popular Categories</h2>
+        <div class="category-card">
+            <h3>
+                <span class="category-title">Meals</span>
+                <span class="more-btn"><a href="/menu?category=1">→</a></span>
+            </h3>
+            <p>Comfort food classics and chef favorites.</p>
+        </div>
+        <div class="category-card">
+            <h3>
+                <span class="category-title">Drinks</span>
+                <span class="more-btn"><a href="/menu?category=2">→</a></span>
+            </h3>
+            <p>Fresh juices, soft drinks, and local flavors.</p>
+        </div>
+        <div class="category-card">
+            <h3>
+                <span class="category-title">Sides</span>
+                <span class="more-btn"><a href="/menu?category=3">→</a></span>
+            </h3>
+            <p>Crunchy, spicy, and perfect to share.</p>
+        </div>
+        <div class="category-card">
+            <h3>
+                <span class="category-title">Chef Picks</span>
+                <span class="more-btn"><a href="/menu">→</a></span>
+            </h3>
+            <p>Hand-selected dishes for your next meal.</p>
+        </div>
+    </section>
+
+    <section class="home-featured-menu" aria-label="Featured dishes">
+        <div class="section-head">
+            <h2>Featured Dishes</h2>
+            <a class="section-link" href="/menu">View full menu <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="dish-grid">
+            <article class="dish-card">
+                <img src="/images/tchep.jpg" alt="Plate of Tchep" loading="lazy">
+                <div>
+                    <h3>Tchep</h3>
+                    <p>Signature tomato rice with fish and vegetables.</p>
+                </div>
+            </article>
+
+            <article class="dish-card">
+                <img src="/images/grilled-chicken.jpg" alt="Grilled chicken" loading="lazy">
+                <div>
+                    <h3>Grilled Chicken</h3>
+                    <p>Flame grilled, juicy, and served with house spices.</p>
+                </div>
+            </article>
+            
+            <article class="dish-card">
+                <img src="/images/garba.jpeg" alt="Garba dish" loading="lazy">
+                <div>
+                    <h3>Garba</h3>
+                    <p>Crispy attieke and fish combo with spicy toppings.</p>
+                </div>
+            </article>
+
+            <article class="dish-card">
+                <img src="/images/attieke.jpg" alt="Attieke with sides" loading="lazy">
+                <div>
+                    <h3>Attieke Special</h3>
+                    <p>Cassava couscous paired with fresh toppings.</p>
+                </div>
+            </article>
+
+            <article class="dish-card">
+                <img src="/images/fried-rice.jpeg" alt="Fried rice dish" loading="lazy">
+                <div>
+                    <h3>Fried Rice Combo</h3>
+                    <p>Colorful rice mix with proteins and vegetables.</p>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <section class="home-articles" aria-label="Learn more">
+        <article class="article-card">
+            <h3>See everything we are cooking today</h3>
+            <p>Browse the complete menu and pick your next favorite meal.</p>
+            <a href="/menu" class="arrow-link">Learn more <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="article-card">
+            <h3>Create your account for faster checkout</h3>
+            <p>Save your details, track your order, and reorder in seconds.</p>
+            <a href="/account/register" class="arrow-link">Learn more <span aria-hidden="true">→</span></a>
+        </article>
+    </section>
+</main>
 
 <%- include('../partials/footer.ejs') %>

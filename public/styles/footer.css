@@ -1,10 +1,15 @@
+footer {
+    background: var(--primary-color);
+    color: var(--background-color);
+    text-align: center;
+    padding: 1rem;
+}
+
 .floating-cart {
     position: fixed;
     right: 20px;
     bottom: 20px;
     z-index: 1000;
-    /* width: 20px;
-    height: 10px; */
     background: var(--primary-color);
     color: var(--background-color);
     border: 2px solid transparent;

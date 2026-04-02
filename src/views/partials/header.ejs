@@ -8,19 +8,28 @@
     <link rel="stylesheet" href="/styles/main.css">
     <link rel="stylesheet" href="/styles/header.css">
     <link rel="stylesheet" href="/styles/footer.css">
+    <script src="/scripts/header.js" defer></script>
     <%- renderStyles() %>
     <%- renderScripts() %>
     <title><%= title %></title>
 </head>
 <body>
     <header>
-        <p>
-            Eat healthy, Live well <br>
-            Your health, Our priority
-        </p>
-        <h4 id="logo"><a href="/">Yofe Eats</a></h4>
+        <div class="header-branding">
+            <p>
+                Eat healthy, Live well <br>
+                Your health, Our priority
+            </p>
+            <h4 id="logo"><a href="/">Yofe Eats</a></h4>
+        </div>
 
-        <nav>
+        <button type="button" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav id="site-navigation" class="site-nav">
             <a href="/menu" <% if (title === 'Menu') { %>class="active"<% } %>>Menu</a>
             <a href="/contact" <% if (title === 'Contact') { %>class="active"<% } %>>Contact</a>
 

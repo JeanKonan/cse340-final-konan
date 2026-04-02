@@ -7,7 +7,16 @@ header {
     padding: .2rem 2rem;
     background-color: var(--secondary-color-light);
     color: var(--text-color);
+    position: relative;
+    gap: 1rem;
     /* border-top: 3px solid var(--secondary-color); */
+
+    .header-branding {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 0;
+    }
 
     p {
         font-size: .9em;
@@ -21,9 +30,34 @@ header {
         font-size: 1.7rem;
     }
 
-    nav {
+    .nav-toggle {
+        display: none;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 1px solid var(--text-color-light);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 4px;
+
+        span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--text-color);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+    }
+
+    .site-nav {
         display: flex;
         gap: 20px;
+        align-items: center;
 
         a, button {
             color: var(--text-color);
@@ -47,6 +81,60 @@ header {
         button[type="submit"] {
             background-color: var(--primary-color);
             color: var(--background-color);
+        }
+    }
+
+    &.nav-open {
+        .nav-toggle span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .nav-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+    }
+}
+
+@media (max-width: 880px) {
+    header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        padding: .8rem 1rem;
+
+        .header-branding {
+            flex: 1 1 auto;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: .35rem;
+        }
+
+        .nav-toggle {
+            display: inline-flex;
+            margin-left: auto;
+        }
+
+        .site-nav {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+            gap: .5rem;
+            padding: .85rem 0 .35rem;
+
+            a, button {
+                width: 100%;
+                text-align: left;
+            }
+        }
+
+        &.nav-open {
+            .site-nav {
+                display: flex;
+            }
         }
     }
 }
