@@ -17,6 +17,7 @@ import orderRoutes from './src/controllers/order/routes.js';
 import accountRoutes from './src/controllers/account/routes.js';
 import adminRoutes from './src/controllers/admin/routes.js';
 import kitchenRoutes from './src/controllers/kitchen/routes.js';
+import contactRoutes from './src/controllers/contact/routes.js';
 
 import router from './src/controllers/index.js';
 import { addLocalVariables } from './src/middleware/global.js';
@@ -73,6 +74,7 @@ app.use('/order', orderRoutes);
 app.use('/account', accountRoutes);
 app.use('/admin', adminRoutes);
 app.use('/kitchen', kitchenRoutes);
+app.use('/contact', contactRoutes);
 app.use('/', router);
 
 // test routes

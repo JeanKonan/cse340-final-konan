@@ -42,11 +42,12 @@ main {
         color: var(--background-color);
         border: none;
         align-items: center;
+        padding-inline: 0;
+        padding-block: 0;
         padding: 5px 20px;
         cursor: pointer;
         border-radius: 15px;
         text-decoration: none;
-        display: inline-block;
         border: 2px solid transparent;
         transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         
