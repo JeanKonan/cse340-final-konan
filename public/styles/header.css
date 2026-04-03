@@ -9,7 +9,6 @@ header {
     color: var(--text-color);
     position: relative;
     gap: 1rem;
-    /* border-top: 3px solid var(--secondary-color); */
 
     .header-branding {
         display: flex;
