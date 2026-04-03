@@ -1,6 +1,7 @@
 import express from 'express';
 import AdminController from './adminMenu.js';
 import { requireAdmin } from '../../middleware/adminMiddleware.js';
+import { categoryValidators, idParamValidator, menuItemValidators, staffAccountValidators, userRoleValidators } from '../../middleware/validators.js';
 
 const router = express.Router();
 
@@ -13,15 +14,15 @@ router.use((req, res, next) => {
 
 router.get('/menu', AdminController.showDashboard);
 router.get('/menu/add', AdminController.showAddForm);
-router.post('/menu', AdminController.addMenuItem);
-router.post('/menu/add', AdminController.addMenuItem);
-router.get('/menu/edit/:id', AdminController.showEditForm);
-router.post('/menu/edit/:id', AdminController.updateMenuItem);
-router.post('/menu/delete/:id', AdminController.deleteMenuItem);
-router.post('/categories', AdminController.addCategory);
-router.post('/categories/edit/:id', AdminController.updateCategory);
-router.post('/categories/delete/:id', AdminController.deleteCategory);
-router.post('/users', AdminController.createStaffAccount);
-router.post('/users/:id/role', AdminController.updateUserRole);
+router.post('/menu', menuItemValidators, AdminController.addMenuItem);
+router.post('/menu/add', menuItemValidators, AdminController.addMenuItem);
+router.get('/menu/edit/:id', idParamValidator, AdminController.showEditForm);
+router.post('/menu/edit/:id', idParamValidator, menuItemValidators, AdminController.updateMenuItem);
+router.post('/menu/delete/:id', idParamValidator, AdminController.deleteMenuItem);
+router.post('/categories', categoryValidators, AdminController.addCategory);
+router.post('/categories/edit/:id', idParamValidator, categoryValidators, AdminController.updateCategory);
+router.post('/categories/delete/:id', idParamValidator, AdminController.deleteCategory);
+router.post('/users', staffAccountValidators, AdminController.createStaffAccount);
+router.post('/users/:id/role', userRoleValidators, AdminController.updateUserRole);
 
 export default router;

@@ -15,7 +15,8 @@ class MenuController {
                 menuItems,
                 categories,
                 selectedCategory: category || null,
-                user: req.session.user || null
+                user: req.session.user || null,
+                error: req.query.error || null
             });
         } catch (error) {
             next(error);

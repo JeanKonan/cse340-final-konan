@@ -1,0 +1,43 @@
+<%- include('../partials/header.ejs') %>
+
+<main id="my-orders">
+    <h1><%= title %></h1>
+
+    <% if (message) { %>
+        <div class="status-message status-success"><%= message %></div>
+    <% } %>
+
+    <% if (error) { %>
+        <div class="status-message status-error"><%= error %></div>
+    <% } %>
+
+    <% if (!orders || orders.length === 0) { %>
+        <p>You have not placed any orders yet.</p>
+        <a href="/menu" class="btn">Browse Menu</a>
+    <% } else { %>
+        <div class="orders-list">
+            <% orders.forEach(order => { %>
+                <article class="order-card">
+                    <div class="order-card-header">
+                        <div>
+                            <h2>Order #<%= order.order_number %></h2>
+                            <p>Placed on <%= new Date(order.created_at).toLocaleString() %></p>
+                        </div>
+                        <span class="order-status"><%= order.status %></span>
+                    </div>
+
+                    <p><strong>Name:</strong> <%= order.customer_name %></p>
+                    <p><strong>Type:</strong> <%= order.pickup ? 'Pickup' : 'Delivery' %></p>
+                    <p><strong>Total:</strong> $<%= Number(order.total).toFixed(2) %></p>
+                    <p><strong>Items:</strong> <%= order.items_summary || 'No items listed' %></p>
+
+                    <div class="order-actions">
+                        <a href="/order/tracking/<%= order.order_number %>" class="btn">Track Order</a>
+                    </div>
+                </article>
+            <% }); %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('../partials/footer.ejs') %>

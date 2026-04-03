@@ -1,5 +1,6 @@
 import OrderModel from "../../models/order.js";
 import { startOrderSimulation } from "../../utils/orderSimulator.js";
+import { getValidationErrors } from '../../middleware/validators.js';
 
 class OrderController {
     static async showCheckout(req, res, next) {
@@ -23,7 +24,9 @@ class OrderController {
                 pickup,
                 deliveryFee: deliveryFee.toFixed(2),
                 total: total.toFixed(2),
-                user: req.session.user || null
+                user: req.session.user || null,
+                errors: [],
+                formData: {}
             });
         } catch (error) {
             next(error);
@@ -36,6 +39,7 @@ class OrderController {
             const cart = req.session.cart?.items || [];
             if (cart.length === 0) return res.redirect('/cart');
 
+            const errors = getValidationErrors(req);
             const { 
                 customerName,
                 customerEmail,
@@ -46,18 +50,33 @@ class OrderController {
                 state,
                 zip,
                 specialInstructions } = req.body;
-            
-            if (!customerName || !customerEmail || !customerPhone) {
-                return res.status(400).json({ error: 'These fields are required' });
-            }
 
-            if (!pickup && (!street || !city || !state || !zip)) {
-                return res.status(400).json({ error: 'Delivery address is required for delivery orders' });
+            if (errors.length > 0) {
+                const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+                const tax = subtotal * 0.06;
+                const normalizedPickup = pickup === true || pickup === 'true';
+                const deliveryFee = normalizedPickup ? 0 : 4.99;
+                const total = subtotal + tax + deliveryFee;
+
+                return res.status(400).render('order/checkout', {
+                    title: 'Checkout',
+                    cart,
+                    subtotal: subtotal.toFixed(2),
+                    tax: tax.toFixed(2),
+                    pickup: normalizedPickup,
+                    deliveryFee: deliveryFee.toFixed(2),
+                    total: total.toFixed(2),
+                    user: req.session.user || null,
+                    error: errors[0],
+                    errors,
+                    formData: { customerName, customerEmail, customerPhone, pickup, street, city, state, zip, specialInstructions }
+                });
             }
 
             const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
             const tax = subtotal * 0.06;
-            const deliveryFee = pickup ? 0 : 4.99;
+            const normalizedPickup = pickup === true || pickup === 'true';
+            const deliveryFee = normalizedPickup ? 0 : 4.99;
             const total = subtotal + tax + deliveryFee;
 
             const order = await OrderModel.createOrder({
@@ -65,7 +84,7 @@ class OrderController {
                 customerName,
                 customerEmail,
                 customerPhone,
-                pickup,
+                pickup: normalizedPickup,
                 deliveryAddress: {
                     street,
                     city,

@@ -40,6 +40,18 @@
                     </div>
                 <% } %>
 
+                <% if (error) { %>
+                    <div class="message error"><%= error %></div>
+                <% } %>
+
+                <% if (errors && errors.length) { %>
+                    <ul class="error-list">
+                        <% errors.forEach(item=> { %>
+                            <li><%= item %></li>
+                            <% }); %>
+                    </ul>
+                <% } %>
+
                 <form action="/contact" method="POST" class="contact-form">
                     <div class="form-group">
                         <label for="name">Name *</label>
@@ -48,6 +60,7 @@
                             id="name" 
                             name="name" 
                             required
+                            value="<%= formData.name || '' %>"
                             placeholder="Your full name"
                         >
                     </div>
@@ -59,6 +72,7 @@
                             id="email" 
                             name="email" 
                             required
+                            value="<%= formData.email || '' %>"
                             placeholder="your.email@example.com"
                         >
                     </div>
@@ -70,6 +84,7 @@
                             id="subject" 
                             name="subject" 
                             required
+                            value="<%= formData.subject || '' %>"
                             placeholder="What is this about?"
                         >
                     </div>
@@ -82,7 +97,7 @@
                             required
                             rows="6"
                             placeholder="Tell us more..."
-                        ></textarea>
+                        ><%= formData.message || '' %></textarea>
                     </div>
 
                     <button type="submit" class="btn">Send Message</button>

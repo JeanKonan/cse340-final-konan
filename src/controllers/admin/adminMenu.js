@@ -1,6 +1,7 @@
 import db from '../../models/sql/db.js';
 import MenuController from '../../models/menu.js';
 import UserModel from '../../models/user.js';
+import { getValidationErrors } from '../../middleware/validators.js';
 
 const buildDashboardUrl = (section, message = null, error = null) => {
     const params = new URLSearchParams();
@@ -43,12 +44,29 @@ class AdminMenuController {
             title: 'Add Menu Item',
             item: null,
             categories,
-            user: req.session.user
+            user: req.session.user,
+            errors: [],
+            formData: {}
         });
     }
 
     static async addMenuItem(req, res) {
+        const errors = getValidationErrors(req);
         const { name, description, price, categoryId, available } = req.body;
+
+        if (errors.length > 0) {
+            const categories = await MenuController.getCategories();
+
+            return res.status(400).render('admin/menu-form', {
+                title: 'Add Menu Item',
+                item: null,
+                categories,
+                user: req.session.user,
+                error: errors[0],
+                errors,
+                formData: { name, description, price, categoryId, available }
+            });
+        }
 
         const query = `
             INSERT INTO menu_items (name, description, price, category_id, available, active)
@@ -60,6 +78,12 @@ class AdminMenuController {
     }
 
     static async showEditForm(req, res) {
+        const errors = getValidationErrors(req);
+
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('menu', null, errors[0]));
+        }
+
         const item = await MenuController.getMenuItemById(req.params.id);
         const categories = await MenuController.getCategories();
 
@@ -71,12 +95,35 @@ class AdminMenuController {
             title: 'Edit Menu Item',
             item,
             categories,
-            user: req.session.user
+            user: req.session.user,
+            errors: [],
+            formData: {}
         });
     }
 
     static async updateMenuItem(req, res) {
+        const errors = getValidationErrors(req);
         const { name, description, price, categoryId, available } = req.body;
+
+        if (errors.length > 0) {
+            const item = await MenuController.getMenuItemById(req.params.id);
+            const categories = await MenuController.getCategories();
+
+            if (!item) {
+                return res.status(404).send('Menu item not found');
+            }
+
+            return res.status(400).render('admin/menu-form', {
+                title: 'Edit Menu Item',
+                item,
+                categories,
+                user: req.session.user,
+                error: errors[0],
+                errors,
+                formData: { name, description, price, categoryId, available }
+            });
+        }
+
         const query = `
             UPDATE menu_items
             SET name = $1, description = $2, price = $3, category_id = $4, available = $5
@@ -88,6 +135,12 @@ class AdminMenuController {
     }
 
     static async deleteMenuItem(req, res) {
+        const errors = getValidationErrors(req);
+
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('menu', null, errors[0]));
+        }
+
         const query = `UPDATE menu_items SET active = false WHERE id = $1`;
         await db.query(query, [req.params.id]);
 
@@ -95,7 +148,12 @@ class AdminMenuController {
     }
 
     static async addCategory(req, res) {
+        const errors = getValidationErrors(req);
         const { name, description, displayOrder } = req.body;
+
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('categories', null, errors[0]));
+        }
 
         try {
             await db.query(
@@ -114,7 +172,12 @@ class AdminMenuController {
     }
 
     static async updateCategory(req, res) {
+        const errors = getValidationErrors(req);
         const { name, description, displayOrder } = req.body;
+
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('categories', null, errors[0]));
+        }
 
         try {
             await db.query(
@@ -134,6 +197,12 @@ class AdminMenuController {
     }
 
     static async deleteCategory(req, res) {
+        const errors = getValidationErrors(req);
+
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('categories', null, errors[0]));
+        }
+
         try {
             await db.query('DELETE FROM categories WHERE id = $1', [req.params.id]);
             res.redirect(buildDashboardUrl('categories', 'Category deleted'));
@@ -144,11 +213,11 @@ class AdminMenuController {
     }
 
     static async createStaffAccount(req, res) {
+        const errors = getValidationErrors(req);
         const { name, email, password, phone, role } = req.body;
-        const allowedRoles = ['kitchen', 'admin'];
 
-        if (!allowedRoles.includes(role)) {
-            return res.redirect(buildDashboardUrl('roles', null, 'Role must be kitchen or admin'));
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('roles', null, errors[0]));
         }
 
         try {
@@ -167,11 +236,11 @@ class AdminMenuController {
     }
 
     static async updateUserRole(req, res) {
+        const errors = getValidationErrors(req);
         const { role } = req.body;
-        const allowedRoles = ['customer', 'kitchen', 'admin'];
 
-        if (!allowedRoles.includes(role)) {
-            return res.redirect(buildDashboardUrl('roles', null, 'Invalid role selected'));
+        if (errors.length > 0) {
+            return res.redirect(buildDashboardUrl('roles', null, errors[0]));
         }
 
         const targetUserId = Number.parseInt(req.params.id, 10);

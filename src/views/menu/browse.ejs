@@ -5,6 +5,10 @@
             </h1>
             <!-- <a href="/">Home</a> | <a href="/cart">Cart</a> -->
 
+            <% if (error) { %>
+                <div class="status-message status-error"><%= error %></div>
+            <% } %>
+
             <div class="category-filter">
                 <a href="/menu" class="<%= !selectedCategory ? 'active' : '' %>">All</a>
                 <% categories.forEach(cat=> { %>

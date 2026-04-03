@@ -1,8 +1,9 @@
 import OrderModel from '../../models/order.js';
 import MenuModel from '../../models/menu.js';
 import db from '../../models/sql/db.js';
+import { ALLOWED_ORDER_STATUSES, getValidationErrors } from '../../middleware/validators.js';
 
-const ALLOWED_STATUSES = ['Placed', 'Preparing', 'Out for Delivery', 'Delivered'];
+const ALLOWED_STATUSES = ALLOWED_ORDER_STATUSES;
 
 class KitchenController {
     static async showDashboard(req, res, next) {
@@ -26,11 +27,12 @@ class KitchenController {
 
     static async updateOrderStatus(req, res, next) {
         try {
+            const errors = getValidationErrors(req);
             const orderId = Number.parseInt(req.params.id, 10);
             const { status } = req.body;
 
-            if (!ALLOWED_STATUSES.includes(status)) {
-                return res.redirect('/kitchen?error=Invalid order status');
+            if (errors.length > 0) {
+                return res.redirect(`/kitchen?error=${encodeURIComponent(errors[0])}`);
             }
 
             const updatedOrder = await OrderModel.updateOrderStatus(orderId, status);
@@ -53,8 +55,13 @@ class KitchenController {
 
     static async updateAvailability(req, res, next) {
         try {
+            const errors = getValidationErrors(req);
             const itemId = Number.parseInt(req.params.id, 10);
-            const isAvailable = req.body.available === 'true';
+            const isAvailable = req.body.available === true || req.body.available === 'true';
+
+            if (errors.length > 0) {
+                return res.redirect(`/kitchen?error=${encodeURIComponent(errors[0])}`);
+            }
 
             await db.query(
                 `

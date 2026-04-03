@@ -1,6 +1,36 @@
 import db from './sql/db.js';
 
 class OrderModel {
+    static async getOrdersByUserId(userId) {
+        try {
+            const query = `
+                SELECT
+                    o.id,
+                    o.order_number,
+                    o.customer_name,
+                    o.total,
+                    o.status,
+                    o.pickup,
+                    o.created_at,
+                    COALESCE(
+                        string_agg(CONCAT(oi.quantity, 'x ', m.name), ', ' ORDER BY m.name),
+                        ''
+                    ) AS items_summary
+                FROM orders o
+                LEFT JOIN order_items oi ON o.id = oi.order_id
+                LEFT JOIN menu_items m ON oi.menu_item_id = m.id
+                WHERE o.user_id = $1
+                GROUP BY o.id
+                ORDER BY o.created_at DESC
+            `;
+
+            const result = await db.query(query, [userId]);
+            return result.rows;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async getKitchenOrders() {
 
         try {

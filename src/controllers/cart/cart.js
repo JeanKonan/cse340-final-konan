@@ -1,4 +1,5 @@
 import MenuModel from "../../models/menu.js";
+import { getValidationErrors } from '../../middleware/validators.js';
 
 class CartController {
     static async initCart(req) {
@@ -31,7 +32,8 @@ class CartController {
                 tax: tax.toFixed(2),
                 // deliveryFee: deliveryFee.toFixed(2),
                 total: total.toFixed(2),
-                user: req.session.user || null
+                user: req.session.user || null,
+                error: req.query.error || null
             });
         } catch (error) {
             next(error);
@@ -43,6 +45,15 @@ class CartController {
             await CartController.initCart(req);
 
             const { menuItemId, quantity } = req.body;
+            const errors = getValidationErrors(req);
+
+            if (errors.length > 0) {
+                const fallbackUrl = '/menu';
+                const referer = req.get('referer') || fallbackUrl;
+                const redirectTarget = referer.includes('/cart') ? fallbackUrl : referer;
+                return res.redirect(`${redirectTarget}${redirectTarget.includes('?') ? '&' : '?'}error=${encodeURIComponent(errors[0])}`);
+            }
+
             const menuItem = await MenuModel.getMenuItemById(menuItemId);
 
             if (!menuItem) {
@@ -84,6 +95,12 @@ class CartController {
             await CartController.initCart(req);
 
             const { menuItemId, quantity } = req.body;
+            const errors = getValidationErrors(req);
+
+            if (errors.length > 0) {
+                return res.redirect(`/cart?error=${encodeURIComponent(errors[0])}`);
+            }
+
             const normalizedMenuItemId = Number(menuItemId);
             const normalizedQuantity = Number.parseInt(quantity, 10) || 0;
             const itemIndex = req.session.cart.items.findIndex(item => Number(item.menuItemId) === normalizedMenuItemId);
@@ -106,6 +123,12 @@ class CartController {
         try {
             await CartController.initCart(req);
             const { menuItemId } = req.body;
+            const errors = getValidationErrors(req);
+
+            if (errors.length > 0) {
+                return res.redirect(`/cart?error=${encodeURIComponent(errors[0])}`);
+            }
+
             const normalizedMenuItemId = Number(menuItemId);
             
             req.session.cart.items = req.session.cart.items.filter(item => Number(item.menuItemId) !== normalizedMenuItemId);

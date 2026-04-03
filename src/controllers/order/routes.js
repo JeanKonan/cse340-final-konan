@@ -1,5 +1,6 @@
 import express from 'express';
 import OrderController from './order.js';
+import { orderPlaceValidators } from '../../middleware/validators.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.use((req, res, next) => {
 });
 
 router.get('/', OrderController.showCheckout);
-router.post('/place', OrderController.placeOrder);
+router.post('/place', orderPlaceValidators, OrderController.placeOrder);
 router.get('/confirmation/:orderNumber', OrderController.showConfirmation);
 router.get('/tracking/:orderNumber', OrderController.showTracking);
 
