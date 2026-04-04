@@ -18,6 +18,11 @@ A full-stack web application for fast-food ordering with real-time delivery trac
 - Update order status (triggers real-time updates to customers)
 - Simulated auto-progression for demo
 
+**Kitchen:**
+- Kitchen dashboard with live incoming order queue
+- Update order status for real-time customer tracking
+- Toggle menu item availability during service
+
 **Authentication:**
 - User registration and login
 - Session-based with secure password hashing
@@ -31,7 +36,6 @@ A full-stack web application for fast-food ordering with real-time delivery trac
 | **Database** | PostgreSQL (raw SQL, no ORM) |
 | **Real-Time** | Socket.io (WebSocket) |
 | **Auth** | bcrypt + express-session |
-| **Testing** | Postman |
 
 ## 🚀 Quick Start
 
@@ -60,10 +64,113 @@ npm run dev
 ```
 
 Visit `http://localhost:3000`
+Live app: `https://cse340-final-konan.onrender.com`
 
 ### Test Accounts
-- **Admin**: admin@fastfood.com / admin123
-- **Customer**: customer@test.com / test123
+- **User role**: test@example.com
+- **Admin role**: admin@example.com
+- **Kitchen role**: johndoe@email.com
+
+## Database Diagram
+
+![Database Diagram](public/images/database-diagram.svg)
+```mermaid
+erDiagram
+	CATEGORIES ||--o{ MENU_ITEMS : categorizes
+	USERS ||--o{ ORDERS : places
+	ORDERS ||--o{ ORDER_ITEMS : contains
+	MENU_ITEMS ||--o{ ORDER_ITEMS : referenced_by
+	ORDERS ||--o{ ORDER_TRACKING : tracked_by
+	USERS ||--o{ SAVED_ADDRESSES : has
+
+	CATEGORIES {
+		int id PK
+		varchar name
+		text description
+		int display_order
+	}
+
+	MENU_ITEMS {
+		int id PK
+		int category_id FK
+		varchar name
+		text description
+		decimal price
+		varchar image_path
+		varchar image_alt
+		boolean available
+		boolean active
+		timestamp created_at
+	}
+
+	USERS {
+		int id PK
+		varchar name
+		varchar email
+		varchar password_hash
+		varchar phone
+		text address
+		varchar role
+		timestamp created_at
+	}
+
+	ORDERS {
+		int id PK
+		int user_id FK
+		varchar order_number
+		varchar customer_name
+		varchar customer_email
+		varchar customer_phone
+		boolean pickup
+		varchar delivery_address_street
+		varchar delivery_address_city
+		varchar delivery_address_state
+		varchar delivery_address_zip
+		text special_instructions
+		decimal subtotal
+		decimal tax
+		decimal delivery_fee
+		decimal total
+		varchar status
+		timestamp created_at
+		timestamp updated_at
+	}
+
+	ORDER_ITEMS {
+		int id PK
+		int order_id FK
+		int menu_item_id FK
+		int quantity
+		decimal unit_price
+		text customization
+		decimal subtotal
+	}
+
+	ORDER_TRACKING {
+		int id PK
+		int order_id FK
+		varchar status
+		timestamp updated_at
+		text notes
+	}
+
+	SAVED_ADDRESSES {
+		int id PK
+		int user_id FK
+		varchar label
+		varchar street
+		varchar city
+		varchar state
+		varchar zip
+		boolean is_default
+	}
+
+	SESSIONS {
+		varchar sid PK
+		json sess
+		timestamp expire
+	}
+```
 
 ## 📁 Project Structure
 
@@ -77,26 +184,7 @@ src/
 └── config/            # Database and Socket.io config
 
 public/               # CSS, JavaScript, images
-postman/              # API test collections
-spec-kit/             # Documentation (spec, plan, tasks)
 ```
-
-## 📋 Documentation
-
-- **[Task Breakdown](spec-kit/.specify/memory/fast-food-ordering-app-tasks.md)**: Detailed 4-week implementation guide
-- **[Specification](spec-kit/.specify/memory/fast-food-ordering-app-spec.md)**: Full feature spec & requirements
-- **[Implementation Plan](spec-kit/.specify/memory/fast-food-ordering-app-plan.md)**: Architecture & design decisions
-- **[Code Principles](spec-kit/.specify/memory/constitution.md)**: Quality standards
-
-## 📅 Implementation Timeline
-
-**4-Week Accelerated Plan:**
-- **Week 1**: Setup, database, menu browsing, cart (12-14 hrs)
-- **Week 2**: Checkout, order placement, WebSocket tracking (10-12 hrs)
-- **Week 3**: User auth, admin menu management (10-12 hrs)
-- **Week 4**: Admin orders, polish, testing, demo prep (11-14 hrs)
-
-**Total: 43-52 hours**
 
 ## 🔒 Security
 

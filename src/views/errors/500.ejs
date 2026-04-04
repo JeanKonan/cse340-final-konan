@@ -1,0 +1,17 @@
+<%- include('../partials/header.ejs') %>
+
+<main id="error-500">
+    <h1>500 - Internal Server Error</h1>
+    <p>Something went wrong while processing your request.</p>
+
+    <% if (showDetails && errorMessage) { %>
+        <p><strong>Details:</strong> <%= errorMessage %></p>
+    <% } %>
+
+    <p>
+        <a href="/" class="btn">Go Home</a>
+        <a href="/menu" class="btn">Browse Menu</a>
+    </p>
+</main>
+
+<%- include('../partials/footer.ejs') %>

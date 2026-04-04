@@ -1,0 +1,95 @@
+erDiagram
+    CATEGORIES ||--o{ MENU_ITEMS : categorizes
+    USERS ||--o{ ORDERS : places
+    ORDERS ||--o{ ORDER_ITEMS : contains
+    MENU_ITEMS ||--o{ ORDER_ITEMS : referenced_by
+    ORDERS ||--o{ ORDER_TRACKING : tracked_by
+    USERS ||--o{ SAVED_ADDRESSES : has
+
+    CATEGORIES {
+        int id PK
+        varchar name
+        text description
+        int display_order
+    }
+
+    MENU_ITEMS {
+        int id PK
+        int category_id FK
+        varchar name
+        text description
+        decimal price
+        varchar image_path
+        varchar image_alt
+        boolean available
+        boolean active
+        timestamp created_at
+    }
+
+    USERS {
+        int id PK
+        varchar name
+        varchar email
+        varchar password_hash
+        varchar phone
+        text address
+        varchar role
+        timestamp created_at
+    }
+
+    ORDERS {
+        int id PK
+        int user_id FK
+        varchar order_number
+        varchar customer_name
+        varchar customer_email
+        varchar customer_phone
+        boolean pickup
+        varchar delivery_address_street
+        varchar delivery_address_city
+        varchar delivery_address_state
+        varchar delivery_address_zip
+        text special_instructions
+        decimal subtotal
+        decimal tax
+        decimal delivery_fee
+        decimal total
+        varchar status
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ORDER_ITEMS {
+        int id PK
+        int order_id FK
+        int menu_item_id FK
+        int quantity
+        decimal unit_price
+        text customization
+        decimal subtotal
+    }
+
+    ORDER_TRACKING {
+        int id PK
+        int order_id FK
+        varchar status
+        timestamp updated_at
+        text notes
+    }
+
+    SAVED_ADDRESSES {
+        int id PK
+        int user_id FK
+        varchar label
+        varchar street
+        varchar city
+        varchar state
+        varchar zip
+        boolean is_default
+    }
+
+    SESSIONS {
+        varchar sid PK
+        json sess
+        timestamp expire
+    }

@@ -83,6 +83,29 @@ app.get('/test', (req, res) => {
     res.send('<h1>Yofe Eats - Server Running!</h1> <a href="/menu">View Menu</a>');
 });
 
+// 404 handler for unmatched routes
+app.use((req, res) => {
+    res.status(404).render('errors/404', {
+        title: 'Page Not Found',
+        requestedPath: req.originalUrl
+    });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled application error:', err);
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    res.status(500).render('errors/500', {
+        title: 'Server Error',
+        showDetails: NODE_ENV.includes('dev'),
+        errorMessage: err?.message || 'An unexpected error occurred.'
+    });
+});
+
 // Start session cleanup task
 startSessionCleanup();
 
