@@ -6,10 +6,6 @@
 
         <a href="/menu" class="btn"><span class="back">←</span></a>
 
-        <% if (error) { %>
-            <div class="status-message status-error"><%= error %></div>
-        <% } %>
-
         <% const cartItems = Array.isArray(cart) ? cart : []; %>
 
         <% if (cartItems.length===0) { %>

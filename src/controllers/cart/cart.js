@@ -32,8 +32,7 @@ class CartController {
                 tax: tax.toFixed(2),
                 // deliveryFee: deliveryFee.toFixed(2),
                 total: total.toFixed(2),
-                user: req.session.user || null,
-                error: req.query.error || null
+                user: req.session.user || null
             });
         } catch (error) {
             next(error);
@@ -51,7 +50,8 @@ class CartController {
                 const fallbackUrl = '/menu';
                 const referer = req.get('referer') || fallbackUrl;
                 const redirectTarget = referer.includes('/cart') ? fallbackUrl : referer;
-                return res.redirect(`${redirectTarget}${redirectTarget.includes('?') ? '&' : '?'}error=${encodeURIComponent(errors[0])}`);
+                req.flash('error', errors[0]);
+                return res.redirect(redirectTarget);
             }
 
             const menuItem = await MenuModel.getMenuItemById(menuItemId);
@@ -98,7 +98,8 @@ class CartController {
             const errors = getValidationErrors(req);
 
             if (errors.length > 0) {
-                return res.redirect(`/cart?error=${encodeURIComponent(errors[0])}`);
+                req.flash('error', errors[0]);
+                return res.redirect('/cart');
             }
 
             const normalizedMenuItemId = Number(menuItemId);
@@ -126,7 +127,8 @@ class CartController {
             const errors = getValidationErrors(req);
 
             if (errors.length > 0) {
-                return res.redirect(`/cart?error=${encodeURIComponent(errors[0])}`);
+                req.flash('error', errors[0]);
+                return res.redirect('/cart');
             }
 
             const normalizedMenuItemId = Number(menuItemId);

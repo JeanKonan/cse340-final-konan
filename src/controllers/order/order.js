@@ -52,6 +52,10 @@ class OrderController {
                 specialInstructions } = req.body;
 
             if (errors.length > 0) {
+                errors.forEach((errorMessage) => {
+                    req.flash('error', errorMessage);
+                });
+
                 const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
                 const tax = subtotal * 0.06;
                 const normalizedPickup = pickup === true || pickup === 'true';
@@ -67,8 +71,6 @@ class OrderController {
                     deliveryFee: deliveryFee.toFixed(2),
                     total: total.toFixed(2),
                     user: req.session.user || null,
-                    error: errors[0],
-                    errors,
                     formData: { customerName, customerEmail, customerPhone, pickup, street, city, state, zip, specialInstructions }
                 });
             }

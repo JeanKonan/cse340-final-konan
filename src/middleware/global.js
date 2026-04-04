@@ -30,6 +30,12 @@ const addLocalVariables = (req, res, next) => {
 
     res.locals.NODE_ENV = process.env.NODE_ENV.toLowerCase() || 'production';
 
+    // Default template locals to prevent EJS ReferenceError when a controller omits them.
+    res.locals.message = null;
+    res.locals.error = null;
+    res.locals.errors = [];
+    res.locals.formData = {};
+
     res.locals.queryParams = { ...req.query };
 
     res.locals.isLoggedIn = false;

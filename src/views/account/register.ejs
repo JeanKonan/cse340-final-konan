@@ -4,20 +4,6 @@
         <h1>
             <%= title %>
         </h1>
-        <% if (typeof error !=='undefined' ) { %>
-            <div class="error">
-                <%= error %>
-            </div>
-            <% } %>
-
-                <% if (errors && errors.length) { %>
-                    <ul class="error-list">
-                        <% errors.forEach(item=> { %>
-                            <li><%= item %></li>
-                            <% }); %>
-                    </ul>
-                <% } %>
-
                 <form method="POST" action="/account/register">
                     <div class="form-group">
                         <label>Full Name</label>

@@ -4,56 +4,74 @@ import { getValidationErrors } from '../../middleware/validators.js';
 
 class AccountController {
     static async showLogin(req, res) {
+        const formData = req.session.accountFormData?.login || {};
+
+        if (req.session.accountFormData?.login) {
+            delete req.session.accountFormData.login;
+        }
+
         res.render('account/login', {
             title: 'Login',
             user: req.session.user || null,
-            errors: [],
-            formData: {}
+            formData
         });
     }
 
     static async processLogin(req, res) {
-        const errors = getValidationErrors(req);
-        const { email, password } = req.body;
+        try {
+            const errors = getValidationErrors(req);
+            const { email, password } = req.body;
 
-        if (errors.length > 0) {
-            return res.status(400).render('account/login', {
-                title: 'Login',
-                error: errors[0],
-                errors,
-                user: null,
-                formData: { email }
-            });
+            if (errors.length > 0) {
+                errors.forEach((errorMessage) => {
+                    req.flash('error', errorMessage);
+                });
+
+                req.session.accountFormData = {
+                    ...(req.session.accountFormData || {}),
+                    login: { email }
+                };
+
+                return res.redirect('/account/login');
+            }
+
+            const user = await UserModel.getUserByEmail(email);
+
+            if (!user || !(await UserModel.verifyPassword(password, user.password_hash))) {
+                req.flash('error', 'Invalid email or password');
+                req.session.accountFormData = {
+                    ...(req.session.accountFormData || {}),
+                    login: { email }
+                };
+                return res.redirect('/account/login');
+            }
+
+            req.session.user = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                role: user.role
+            };
+            res.redirect('/menu');
+        } catch (error) {
+            console.error('Error processing login:', error);
+            req.flash('error', 'Unable to log in right now. Please try again later.');
+            res.redirect('/account/login');
         }
-
-        const user = await UserModel.getUserByEmail(email);
-
-        if (!user || !(await UserModel.verifyPassword(password, user.password_hash))) {
-            return res.render('account/login', {
-                title: 'Login',
-                error: 'Invalid email or password',
-                errors: ['Invalid email or password'],
-                user: null,
-                formData: { email }
-            });
-        }
-
-        req.session.user = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            role: user.role
-        };
-        res.redirect('/menu');
     }
 
     static async showRegister(req, res) {
+        const formData = req.session.accountFormData?.register || {};
+
+        if (req.session.accountFormData?.register) {
+            delete req.session.accountFormData.register;
+        }
+
         res.render('account/register', {
             title: 'Register',
             user: req.session.user || null,
-            errors: [],
-            formData: {}
+            formData
         });
     }
 
@@ -68,9 +86,7 @@ class AccountController {
             res.render('account/myorders', {
                 title: 'My orders',
                 user: req.session.user,
-                orders,
-                message: req.query.message || null,
-                error: req.query.error || null
+                orders
             });
         } catch (error) {
             next(error);
@@ -82,13 +98,16 @@ class AccountController {
         const { name, email, password, phone } = req.body;
 
         if (errors.length > 0) {
-            return res.status(400).render('account/register', {
-                title: 'Register',
-                error: errors[0],
-                errors,
-                user: null,
-                formData: { name, email, phone }
+            errors.forEach((errorMessage) => {
+                req.flash('error', errorMessage);
             });
+
+            req.session.accountFormData = {
+                ...(req.session.accountFormData || {}),
+                register: { name, email, phone }
+            };
+
+            return res.redirect('/account/register');
         }
 
         try {
@@ -102,13 +121,13 @@ class AccountController {
             };
             res.redirect('/menu');
         } catch (error) {
-            res.render('account/register', {
-                title: 'Register',
-                error: 'Error creating user',
-                errors: ['Error creating user'],
-                user: null,
-                formData: { name, email, phone }
-            });
+            console.error('Error creating user:', error);
+            req.flash('error', 'Error creating user');
+            req.session.accountFormData = {
+                ...(req.session.accountFormData || {}),
+                register: { name, email, phone }
+            };
+            res.redirect('/account/register');
         }
     }
 

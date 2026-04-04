@@ -16,8 +16,6 @@ class KitchenController {
                 orders,
                 menuItems,
                 statuses: ALLOWED_STATUSES,
-                message: req.query.message || null,
-                error: req.query.error || null,
                 user: req.session.user || null
             });
         } catch (error) {
@@ -32,7 +30,8 @@ class KitchenController {
             const { status } = req.body;
 
             if (errors.length > 0) {
-                return res.redirect(`/kitchen?error=${encodeURIComponent(errors[0])}`);
+                req.flash('error', errors[0]);
+                return res.redirect('/kitchen');
             }
 
             const updatedOrder = await OrderModel.updateOrderStatus(orderId, status);
@@ -47,9 +46,12 @@ class KitchenController {
                 status
             });
 
-            res.redirect('/kitchen?message=Order status updated');
+            req.flash('success', 'Order status updated');
+            res.redirect('/kitchen');
         } catch (error) {
-            next(error);
+            console.error('Error updating order status:', error);
+            req.flash('error', 'Unable to update order status right now.');
+            res.redirect('/kitchen');
         }
     }
 
@@ -60,7 +62,8 @@ class KitchenController {
             const isAvailable = req.body.available === true || req.body.available === 'true';
 
             if (errors.length > 0) {
-                return res.redirect(`/kitchen?error=${encodeURIComponent(errors[0])}`);
+                req.flash('error', errors[0]);
+                return res.redirect('/kitchen');
             }
 
             await db.query(
@@ -72,9 +75,12 @@ class KitchenController {
                 [isAvailable, itemId]
             );
 
-            res.redirect('/kitchen?message=Menu availability updated');
+            req.flash('success', 'Menu availability updated');
+            res.redirect('/kitchen');
         } catch (error) {
-            next(error);
+            console.error('Error updating menu availability:', error);
+            req.flash('error', 'Unable to update menu availability right now.');
+            res.redirect('/kitchen');
         }
     }
 }

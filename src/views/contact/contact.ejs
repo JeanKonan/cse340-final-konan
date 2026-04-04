@@ -34,24 +34,6 @@
             </div>
 
             <div class="contact-form-wrapper">
-                <% if (message) { %>
-                    <div class="message <%= message.includes('Thank you') ? 'success' : 'info' %>">
-                        <%= message %>
-                    </div>
-                <% } %>
-
-                <% if (error) { %>
-                    <div class="message error"><%= error %></div>
-                <% } %>
-
-                <% if (errors && errors.length) { %>
-                    <ul class="error-list">
-                        <% errors.forEach(item=> { %>
-                            <li><%= item %></li>
-                            <% }); %>
-                    </ul>
-                <% } %>
-
                 <form action="/contact" method="POST" class="contact-form">
                     <div class="form-group">
                         <label for="name">Name *</label>

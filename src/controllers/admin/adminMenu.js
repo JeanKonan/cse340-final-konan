@@ -3,11 +3,9 @@ import MenuController from '../../models/menu.js';
 import UserModel from '../../models/user.js';
 import { getValidationErrors } from '../../middleware/validators.js';
 
-const buildDashboardUrl = (section, message = null, error = null) => {
+const buildDashboardUrl = (section) => {
     const params = new URLSearchParams();
     params.set('section', section);
-    if (message) params.set('message', message);
-    if (error) params.set('error', error);
     return `/admin/menu?${params.toString()}`;
 };
 
@@ -31,8 +29,6 @@ class AdminMenuController {
             menuItems,
             categories,
             users,
-            message: req.query.message || null,
-            error: req.query.error || null,
             user: req.session.user
         });
     }
@@ -45,6 +41,7 @@ class AdminMenuController {
             item: null,
             categories,
             user: req.session.user,
+            error: null,
             errors: [],
             formData: {}
         });
@@ -55,6 +52,10 @@ class AdminMenuController {
         const { name, description, price, categoryId, available } = req.body;
 
         if (errors.length > 0) {
+            errors.forEach((errorMessage) => {
+                req.flash('error', errorMessage);
+            });
+
             const categories = await MenuController.getCategories();
 
             return res.status(400).render('admin/menu-form', {
@@ -62,8 +63,6 @@ class AdminMenuController {
                 item: null,
                 categories,
                 user: req.session.user,
-                error: errors[0],
-                errors,
                 formData: { name, description, price, categoryId, available }
             });
         }
@@ -74,14 +73,16 @@ class AdminMenuController {
         `;
 
         await db.query(query, [name, description, price, categoryId, available === 'on']);
-        res.redirect(buildDashboardUrl('menu', 'Menu item added'));
+        req.flash('success', 'Menu item added');
+        res.redirect(buildDashboardUrl('menu'));
     }
 
     static async showEditForm(req, res) {
         const errors = getValidationErrors(req);
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('menu', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('menu'));
         }
 
         const item = await MenuController.getMenuItemById(req.params.id);
@@ -96,6 +97,7 @@ class AdminMenuController {
             item,
             categories,
             user: req.session.user,
+            error: null,
             errors: [],
             formData: {}
         });
@@ -106,6 +108,10 @@ class AdminMenuController {
         const { name, description, price, categoryId, available } = req.body;
 
         if (errors.length > 0) {
+            errors.forEach((errorMessage) => {
+                req.flash('error', errorMessage);
+            });
+
             const item = await MenuController.getMenuItemById(req.params.id);
             const categories = await MenuController.getCategories();
 
@@ -118,8 +124,6 @@ class AdminMenuController {
                 item,
                 categories,
                 user: req.session.user,
-                error: errors[0],
-                errors,
                 formData: { name, description, price, categoryId, available }
             });
         }
@@ -131,20 +135,23 @@ class AdminMenuController {
         `;
         await db.query(query, [name, description, price, categoryId, available === 'on', req.params.id]);
 
-        res.redirect(buildDashboardUrl('menu', 'Menu item updated'));
+        req.flash('success', 'Menu item updated');
+        res.redirect(buildDashboardUrl('menu'));
     }
 
     static async deleteMenuItem(req, res) {
         const errors = getValidationErrors(req);
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('menu', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('menu'));
         }
 
         const query = `UPDATE menu_items SET active = false WHERE id = $1`;
         await db.query(query, [req.params.id]);
 
-        res.redirect(buildDashboardUrl('menu', 'Menu item deleted'));
+        req.flash('success', 'Menu item deleted');
+        res.redirect(buildDashboardUrl('menu'));
     }
 
     static async addCategory(req, res) {
@@ -152,7 +159,8 @@ class AdminMenuController {
         const { name, description, displayOrder } = req.body;
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('categories', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('categories'));
         }
 
         try {
@@ -164,10 +172,12 @@ class AdminMenuController {
                 [name?.trim(), description?.trim() || null, Number.parseInt(displayOrder, 10) || 0]
             );
 
-            res.redirect(buildDashboardUrl('categories', 'Category added'));
+            req.flash('success', 'Category added');
+            res.redirect(buildDashboardUrl('categories'));
         } catch (error) {
             console.error('Error adding category:', error);
-            res.redirect(buildDashboardUrl('categories', null, 'Unable to add category'));
+            req.flash('error', 'Unable to add category');
+            res.redirect(buildDashboardUrl('categories'));
         }
     }
 
@@ -176,7 +186,8 @@ class AdminMenuController {
         const { name, description, displayOrder } = req.body;
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('categories', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('categories'));
         }
 
         try {
@@ -189,10 +200,12 @@ class AdminMenuController {
                 [name?.trim(), description?.trim() || null, Number.parseInt(displayOrder, 10) || 0, req.params.id]
             );
 
-            res.redirect(buildDashboardUrl('categories', 'Category updated'));
+            req.flash('success', 'Category updated');
+            res.redirect(buildDashboardUrl('categories'));
         } catch (error) {
             console.error('Error updating category:', error);
-            res.redirect(buildDashboardUrl('categories', null, 'Unable to update category'));
+            req.flash('error', 'Unable to update category');
+            res.redirect(buildDashboardUrl('categories'));
         }
     }
 
@@ -200,15 +213,18 @@ class AdminMenuController {
         const errors = getValidationErrors(req);
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('categories', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('categories'));
         }
 
         try {
             await db.query('DELETE FROM categories WHERE id = $1', [req.params.id]);
-            res.redirect(buildDashboardUrl('categories', 'Category deleted'));
+            req.flash('success', 'Category deleted');
+            res.redirect(buildDashboardUrl('categories'));
         } catch (error) {
             console.error('Error deleting category:', error);
-            res.redirect(buildDashboardUrl('categories', null, 'Unable to delete category'));
+            req.flash('error', 'Unable to delete category');
+            res.redirect(buildDashboardUrl('categories'));
         }
     }
 
@@ -217,7 +233,8 @@ class AdminMenuController {
         const { name, email, password, phone, role } = req.body;
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('roles', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('roles'));
         }
 
         try {
@@ -228,10 +245,12 @@ class AdminMenuController {
                 phone: phone || null,
                 role
             });
-            return res.redirect(buildDashboardUrl('roles', 'Staff account created'));
+            req.flash('success', 'Staff account created');
+            return res.redirect(buildDashboardUrl('roles'));
         } catch (error) {
             console.error('Error creating staff account:', error);
-            return res.redirect(buildDashboardUrl('roles', null, 'Unable to create staff account'));
+            req.flash('error', 'Unable to create staff account');
+            return res.redirect(buildDashboardUrl('roles'));
         }
     }
 
@@ -240,20 +259,24 @@ class AdminMenuController {
         const { role } = req.body;
 
         if (errors.length > 0) {
-            return res.redirect(buildDashboardUrl('roles', null, errors[0]));
+            req.flash('error', errors[0]);
+            return res.redirect(buildDashboardUrl('roles'));
         }
 
         const targetUserId = Number.parseInt(req.params.id, 10);
         if (targetUserId === req.session.user.id && role !== 'admin') {
-            return res.redirect(buildDashboardUrl('roles', null, 'You cannot remove your own admin access'));
+            req.flash('error', 'You cannot remove your own admin access');
+            return res.redirect(buildDashboardUrl('roles'));
         }
 
         try {
             await db.query('UPDATE users SET role = $1 WHERE id = $2', [role, targetUserId]);
-            res.redirect(buildDashboardUrl('roles', 'User role updated'));
+            req.flash('success', 'User role updated');
+            res.redirect(buildDashboardUrl('roles'));
         } catch (error) {
             console.error('Error updating user role:', error);
-            res.redirect(buildDashboardUrl('roles', null, 'Unable to update user role'));
+            req.flash('error', 'Unable to update user role');
+            res.redirect(buildDashboardUrl('roles'));
         }
     }
 }

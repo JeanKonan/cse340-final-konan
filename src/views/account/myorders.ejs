@@ -3,14 +3,6 @@
 <main id="my-orders">
     <h1><%= title %></h1>
 
-    <% if (message) { %>
-        <div class="status-message status-success"><%= message %></div>
-    <% } %>
-
-    <% if (error) { %>
-        <div class="status-message status-error"><%= error %></div>
-    <% } %>
-
     <% if (!orders || orders.length === 0) { %>
         <p>You have not placed any orders yet.</p>
         <a href="/menu" class="btn">Browse Menu</a>

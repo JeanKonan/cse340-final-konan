@@ -12,13 +12,6 @@
             <a href="/admin/menu?section=roles" class="<%= section === 'roles' ? 'active' : '' %>">Roles</a>
         </nav>
 
-        <% if (message) { %>
-            <p class="status-message status-success"><%= message %></p>
-        <% } %>
-        <% if (error) { %>
-            <p class="status-message status-error"><%= error %></p>
-        <% } %>
-
         <% if (section === 'menu') { %>
             <h2>Manage Menu Items</h2>
             <a href="/admin/menu/add" class="btn">+ Add New Item</a>

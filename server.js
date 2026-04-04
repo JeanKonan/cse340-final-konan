@@ -21,6 +21,7 @@ import contactRoutes from './src/controllers/contact/routes.js';
 
 import router from './src/controllers/index.js';
 import { addLocalVariables } from './src/middleware/global.js';
+import flash from './src/middleware/flash.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,7 +67,7 @@ app.use(session({
 }));
 
 app.use(addLocalVariables);
-
+app.use(flash);
 app.use('/menu', menuRoutes);
 app.use('/cart', cartRoutes);
 app.use('/checkout', orderRoutes);

@@ -11,6 +11,5 @@ router.use((req, res, next) => {
 
 router.get('/', ContactController.showContactForm);
 router.post('/', contactValidators, ContactController.submitContactForm);
-router.post('/', ContactController.submitContactForm);
 
 export default router;
