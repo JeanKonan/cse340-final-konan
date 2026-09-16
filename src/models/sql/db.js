@@ -6,21 +6,45 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const caCert  = fs.readFileSync(path.join(__dirname, '../../../bin', 'byuicse-psql-cert.pem'));
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+    throw new Error('Missing DATABASE_URL environment variable.');
+}
+
+const dbHost = new URL(databaseUrl).hostname;
+const byuiCertPath = path.join(__dirname, '../../../bin', 'byuicse-psql-cert.pem');
+const byuiCertExists = fs.existsSync(byuiCertPath);
+const useRenderManagedSsl = dbHost.endsWith('render.com');
+
+let caCert = null;
+if (!useRenderManagedSsl && byuiCertExists) {
+    caCert = fs.readFileSync(byuiCertPath);
+}
 
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
+const poolConfig = {
+    connectionString: databaseUrl
+};
+
+if (useRenderManagedSsl) {
+    poolConfig.ssl = {
+        rejectUnauthorized: true
+    };
+} else if (caCert) {
+    poolConfig.ssl = {
         ca: caCert,
         rejectUnauthorized: true,
-        checkServerIdentity: () => { return undefined; }
-    }
-});
+        checkServerIdentity: () => {
+            return undefined;
+        }
+    };
+}
+
+const pool = new Pool(poolConfig);
 
 let db = null;
 
-if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
+if (process.env.NODE_ENV?.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
 
     db = {
         async query(text, params) {

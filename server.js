@@ -33,6 +33,23 @@ const PgSession = connectPgSimple(session);
 const server = createServer(app);
 const io = new Server(server);
 
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+    throw new Error('Missing DATABASE_URL environment variable.');
+}
+
+const sessionDbHost = new URL(databaseUrl).hostname;
+const useRenderManagedSsl = sessionDbHost.endsWith('render.com');
+const sessionSslConfig = useRenderManagedSsl
+    ? { rejectUnauthorized: true }
+    : (caCert
+        ? {
+            ca: caCert,
+            rejectUnauthorized: true,
+            checkServerIdentity: () => { return undefined; }
+        }
+        : undefined);
+
 // View engine setup
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -45,13 +62,8 @@ app.use(cookieParser());
 app.use(session({
     store: new PgSession({
         conObject: {
-            connectionString: process.env.DATABASE_URL,
-            // Configure SSL for session store connection (required by BYU-I databases)
-            ssl: {
-                ca: caCert,
-                rejectUnauthorized: true,
-                checkServerIdentity: () => { return undefined; }
-            }
+            connectionString: databaseUrl,
+            ssl: sessionSslConfig
         },
         tableName: 'sessions',
         createTableIfMissing: true
